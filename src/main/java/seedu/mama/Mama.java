@@ -25,7 +25,7 @@ public class Mama {
                 "workout goal, " +
                 "workout goal <duration in minutes>, " +
                 "weight <weight>, " +
-                "milk <volume> /date <yyyy/MM/dd>, " +
+                "milk <volume>, " +
                 "delete <index>, " +
                 "list, " +
                 "bye)");
