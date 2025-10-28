@@ -1,0 +1,58 @@
+@startuml
+title Mama – ListCommandParser Class Diagram
+
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+
+package "seedu.mama.parser" {
+  class ListCommandParser {
+    +parseListCommand(arguments: String): Command <<static>>
+  }
+}
+
+package "seedu.mama.command" {
+  interface Command {
+    +execute(entries: EntryList, storage: Storage): CommandResult
+  }
+
+  class ListCommand implements Command {
+    +ListCommand()
+    +ListCommand(predicate: Predicate<Entry>, displayType: String)
+    +execute(entries: EntryList, storage: Storage): CommandResult
+  }
+
+  class CommandException {
+    +CommandException(message: String)
+    +CommandException(message: String, cause: Throwable)
+  }
+}
+
+package "seedu.mama.model" {
+  class Entry {
+    +type(): String
+    +toListLine(): String
+  }
+
+  enum EntryType {
+    MEAL
+    WORKOUT
+    MILK
+    MEASURE
+    WEIGHT
+    +getValidTypesString(): String
+  }
+}
+
+package "java.util.function" {
+  interface Predicate<T> {
+    +test(t: T): boolean
+  }
+}
+
+' Relationships
+ListCommandParser ..> ListCommand : creates
+ListCommandParser ..> Predicate : builds
+ListCommandParser ..> EntryType : validates type
+ListCommandParser ..> CommandException : throws
+ListCommandParser ..> Command : returns
+@enduml

@@ -8,6 +8,7 @@ public enum EntryType {
     WORKOUT(WorkoutEntry.class),
     MILK(MilkEntry.class),
     WEIGHT(WeightEntry.class),
+    MEASURE(BodyMeasurementEntry.class),
     WORKOUT_GOAL(WorkoutGoalEntry.class);
 
     // This field can be used for more advanced logic later if needed

@@ -1,1 +1,12 @@
+list
+delete 1
+list
+delete 2
+weight ?
+weight 83
+weight ?
+list /t weight
+list /t measure
+delete 3
+list
 bye

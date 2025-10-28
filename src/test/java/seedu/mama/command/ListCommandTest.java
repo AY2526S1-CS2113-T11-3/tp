@@ -51,7 +51,7 @@ public class ListCommandTest {
     @Test
     public void execute_multipleEntries_returnsNumberedList() throws CommandException {
         entries.add(new MealEntry("Chicken Rice", 500));
-        entries.add(new WorkoutEntry("Evening Run", 300));
+        entries.add(new WorkoutEntry("Evening Run", 300, 4));
 
         ListCommand command = new ListCommand();
         CommandResult result = command.execute(entries, storageStub);
@@ -69,7 +69,7 @@ public class ListCommandTest {
     @Test
     public void execute_filterByType_returnsFilteredList() throws CommandException {
         entries.add(new MealEntry("Salad", 350));
-        entries.add(new WorkoutEntry("Morning Yoga", 150));
+        entries.add(new WorkoutEntry("Morning Yoga", 150, 5));
         entries.add(new MealEntry("Noodles", 600));
 
         Predicate<Entry> mealPredicate = entry -> entry instanceof MealEntry;
