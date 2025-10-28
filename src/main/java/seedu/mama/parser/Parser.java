@@ -2,6 +2,7 @@ package seedu.mama.parser;
 
 import seedu.mama.command.CommandException;
 import seedu.mama.command.CommandResult;
+import seedu.mama.command.DashboardCommand;
 import seedu.mama.command.SetGoalCommand;
 import seedu.mama.command.SetWorkoutGoalCommand;
 import seedu.mama.command.ViewWorkoutGoalCommand;
@@ -49,6 +50,10 @@ public class Parser {
         // Handles the "bye" command (terminates the program)
         if (trimmed.equals("bye")) {
             return (l, s) -> new CommandResult("Bye. Hope to see you again soon!");
+        }
+
+        if (trimmed.equals("dashboard")) {
+            return new DashboardCommand();
         }
 
         // Handles "delete" commands
@@ -117,6 +122,48 @@ public class Parser {
             return AddMealCommand.fromInput(trimmed);
         }
 
+        // Handles "measure" command
+        if (trimmed.startsWith("measure")) {
+            String[] parts = trimmed.split("\\s+");
+            if (parts.length == 2 && "?".equals(parts[1])) {
+                return (l, s) -> new CommandResult(
+                        "Usage: measure waist/<cm> hips/<cm> [chest/<cm>] [thigh/<cm>] [arm/<cm>]");
+            }
+
+            Integer waist = null;
+            Integer hips = null;
+            Integer chest = null;
+            Integer thigh = null;
+            Integer arm = null;
+
+            for (int i = 1; i < parts.length; i++) {
+                String p = parts[i].trim().toLowerCase();
+                try {
+                    if (p.startsWith("waist/")) {
+                        waist = Integer.parseInt(p.substring(6));
+                    } else if (p.startsWith("hips/")) {
+                        hips = Integer.parseInt(p.substring(5));
+                    } else if (p.startsWith("chest/")) {
+                        chest = Integer.parseInt(p.substring(6));
+                    } else if (p.startsWith("thigh/")) {
+                        thigh = Integer.parseInt(p.substring(6));
+                    } else if (p.startsWith("arm/")) {
+                        arm = Integer.parseInt(p.substring(4));
+                    } else {
+                        return (l, s) -> new CommandResult("Unknown field: " + p);
+                    }
+                } catch (NumberFormatException e) {
+                    return (l, s) -> new CommandResult("Invalid number format for: " + p);
+                }
+            }
+
+            try {
+                return new seedu.mama.command.AddMeasurementCommand(waist, hips, chest, thigh, arm);
+            } catch (seedu.mama.command.CommandException e) {
+                return (l, s) -> new CommandResult(e.getMessage());
+            }
+        }
+
         // Handles "goal" command
         if (trimmed.startsWith("goal ")) {
             // "goal <calorie goal>" -> set new goal
@@ -153,8 +200,6 @@ public class Parser {
                 return new CommandResult(progress);
             };
         }
-
-
         return (l, s) -> new CommandResult("Unknown command.");
     }
 }

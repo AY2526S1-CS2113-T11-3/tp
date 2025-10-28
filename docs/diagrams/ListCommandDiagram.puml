@@ -1,0 +1,77 @@
+@startuml
+title Mama – ListCommand Class Diagram
+
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+
+package "seedu.mama.command" {
+  interface Command {
+    +execute(entries: EntryList, storage: Storage): CommandResult
+  }
+
+  class CommandResult {
+    +CommandResult(message: String)
+    +getMessage(): String
+  }
+
+  class CommandException {
+    +CommandException(message: String)
+    +CommandException(message: String, cause: Throwable)
+  }
+
+  class ListCommand implements Command {
+    -LOGGER: Logger <<static>>
+    --
+    -predicate: Predicate<Entry>
+    -displayType: String
+    --
+    +ListCommand()
+    +ListCommand(predicate: Predicate<Entry>, displayType: String)
+    +execute(entries: EntryList, storage: Storage): CommandResult
+  }
+}
+
+package "seedu.mama.model" {
+  abstract class Entry {
+    +toListLine(): String
+  }
+
+  class EntryList {
+    +asList(): List<Entry>
+    +size(): int
+    +get(i: int): Entry
+  }
+}
+
+package "seedu.mama.storage" {
+  class Storage {
+    +save(list: EntryList): void
+    +loadOrEmpty(): EntryList
+  }
+}
+
+package "java.util" {
+  interface List<T>
+}
+
+package "java.util.function" {
+  interface Predicate<T> {
+    +test(t: T): boolean
+  }
+}
+
+package "java.util.logging" {
+  class Logger
+}
+
+' Relationships
+ListCommand ..|> Command
+ListCommand ..> Predicate : holds filter
+ListCommand ..> EntryList : reads entries
+ListCommand ..> Entry : formats toListLine()
+ListCommand ..> CommandResult : returns
+ListCommand ..> CommandException : throws (execute signature)
+ListCommand ..> Logger : logs
+
+EntryList "1" o--> "many" Entry
+@enduml

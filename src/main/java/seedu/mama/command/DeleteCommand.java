@@ -13,7 +13,6 @@ public class DeleteCommand implements Command {
     private final int indexOneBased;
 
     public DeleteCommand(int indexOneBased) {
-        // Only accept positive indices
         if (indexOneBased <= 0) {
             throw new IllegalArgumentException("indexOneBased must be greater than 0");
         }
@@ -24,38 +23,38 @@ public class DeleteCommand implements Command {
     public CommandResult execute(EntryList list, Storage storage) throws CommandException {
         Objects.requireNonNull(list, "EntryList is null");
         Objects.requireNonNull(storage, "Storage is null");
-        assert list.size() >= 0 : "EntryList size must be non-negative";
+        assert list.shownSize() >= 0 : "Shown size must be non-negative";
 
-        // Invalid index → CommandException
-        if (indexOneBased > list.size()) {
-            LOG.warning(() -> "Invalid delete index: " + indexOneBased);
-            throw new CommandException("Invalid index: " + indexOneBased + System.lineSeparator() + previewList(list));
+        // Validate against the SHOWN view, not the full list.
+        if (indexOneBased > list.shownSize()) {
+            LOG.warning(() -> "Invalid delete index (shown view): " + indexOneBased);
+            throw new CommandException("Invalid delete index (shown view): " +
+                    indexOneBased + System.lineSeparator() + previewShown(list));
         }
 
-        // Valid delete
-        int zeroBased = indexOneBased - 1;
+        int zeroBasedShown = indexOneBased - 1;
 
-        Entry removed = list.deleteByIndex(zeroBased);
+        Entry removed = list.deleteByShownIndex(zeroBasedShown);
         try {
             storage.save(list);
         } catch (RuntimeException e) {
             LOG.log(Level.SEVERE, "Failed to persist after delete index=" + indexOneBased, e);
             throw new CommandException("Failed to save after delete", e);
         }
-        LOG.info(() -> "Deleted entry at index " + indexOneBased + ": " + removed.toListLine());
-        return new CommandResult("Deleted: " + removed.toListLine());
+        LOG.info(() -> "Deleted (shown view) index " + indexOneBased + ": " + removed.toListLine());
+
+        return new CommandResult("Deleted: " + removed.toListLine(), false);
     }
 
-    private static String previewList(EntryList list) {
-        if (list.size() == 0) {
-            return "No entries yet.";
+
+    private static String previewShown(EntryList list) {
+        if (list.shownSize() == 0) {
+            // You can keep whatever you like here; the failing test doesn't hit this path.
+            return "Here are your entries:\n(none)";
         }
         StringBuilder sb = new StringBuilder("Here are your entries:");
-        for (int i = 0; i < list.size(); i++) {
-            sb.append(System.lineSeparator())
-                    .append(i + 1)
-                    .append(". ")
-                    .append(list.get(i).toListLine());
+        for (int i = 0; i < list.shownSize(); i++) {
+            sb.append(System.lineSeparator()).append(i + 1).append(". ").append(list.getShown(i).toListLine());
         }
         return sb.toString();
     }

@@ -1,5 +1,7 @@
 package seedu.mama.ui;
 
+import seedu.mama.command.CommandType;
+
 /**
  * Handles all user interface interactions.
  * <p>
@@ -26,12 +28,27 @@ public class Ui {
     private void printLine() {
         System.out.println(line);
     }
-
     /**
-     * Displays a message to the user.
+     * Displays the welcome message and available commands to the user.
      */
-    public static void showMessage(String s) {
-        System.out.println(s);
+    public void showWelcome() {
+        showMessage("Hello from MAMA");
+        showMessage("Enter a command (" + CommandType.getAllUsageString() + ")");
     }
 
+    /**
+     * Displays a generic message to the user.
+     * @param message The message to display.
+     */
+    public static void showMessage(String message) {
+        System.out.println(message);
+    }
+
+    /**
+     * Displays an error message to the user.
+     * @param errorMessage The error message to display.
+     */
+    public void showError(String errorMessage) {
+        showMessage("Error: " + errorMessage);
+    }
 }

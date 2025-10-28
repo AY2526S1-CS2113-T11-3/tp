@@ -26,9 +26,9 @@ public class DeleteCommandTest {
     @BeforeEach
     public void setUp() {
         list = new EntryList();
-        list.add(new WorkoutEntry("Run", 30));
-        list.add(new WorkoutEntry("Swim", 30));
-        list.add(new WorkoutEntry("Cycle", 30));
+        list.add(new WorkoutEntry("Run", 30, 4));
+        list.add(new WorkoutEntry("Swim", 30, 3));
+        list.add(new WorkoutEntry("Cycle", 30, 5));
 
         storage = new Storage(Path.of("build", "test-storage.txt"));
     }
@@ -41,13 +41,14 @@ public class DeleteCommandTest {
 
         assertEquals(2, list.size());
         assertFalse(output.getFeedbackToUser().isEmpty());
-        assertTrue(output.getFeedbackToUser().startsWith("Deleted:"));
-        assertTrue(output.getFeedbackToUser().contains("[Workout] Swim (30 mins)"));
+        assertTrue(output.getFeedbackToUser().startsWith("Deleted:"), "Should start with 'Deleted:'");
+        assertTrue(output.getFeedbackToUser().contains("[Workout] Swim (30 mins, feel 3/5)"),
+                "Feedback should include the deleted entry with feel rating");
 
         String first = list.get(0).toListLine();
         String second = list.get(1).toListLine();
-        assertTrue(first.startsWith("[Workout] Run (30 mins)"), first);
-        assertTrue(second.startsWith("[Workout] Cycle (30 mins)"), second);
+        assertTrue(first.contains("Run") && first.contains("feel 4/5"), first);
+        assertTrue(second.contains("Cycle") && second.contains("feel 5/5"), second);
     }
 
     @Test
@@ -59,7 +60,7 @@ public class DeleteCommandTest {
                 () -> cmd.execute(list, storage)
         );
 
-        assertTrue(ex.getMessage().startsWith("Invalid index: 5"));
+        assertTrue(ex.getMessage().startsWith("Invalid delete index (shown view): 5"));
         assertTrue(ex.getMessage().contains("Here are your entries:"));
         assertEquals(3, list.size(), "List should remain unchanged");
     }

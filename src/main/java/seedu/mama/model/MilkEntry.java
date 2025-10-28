@@ -1,25 +1,45 @@
 package seedu.mama.model;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
+import seedu.mama.util.DateTimeUtil;
 
-public class MilkEntry extends Entry {
-    private static int totalMilkVol;
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm");
+/**
+ * Represents a milk-pumping session.
+ */
+public class MilkEntry extends TimestampedEntry {
 
-    private final String date;
+    // 1) Constants (optional but nice to have)
+    public static final String TYPE = "MILK";
 
+    // 2) Static fields
+    // Back-compat static counters used elsewhere (e.g., AddMilkCommand, EntryList)
+    private static int totalMilkVol = 0;
+
+    // 3) Instance fields
+    private static int volumeMl = 0;
+
+    // 4) Constructors (ALL ctors before any methods)
+
+    /**
+     * New entries created from user input. Timestamp = now().
+     */
     public MilkEntry(String userInput) {
-        super("MILK", userInput);
-        this.date = LocalDateTime.now().format(formatter);
+        super(TYPE, normalizeVolume(userInput));
+        volumeMl = parseVolumeMl(userInput);
     }
 
-    public MilkEntry(String userInput, LocalDateTime dateTime) {
-        super("MILK", userInput);
-        this.date = formatDate(dateTime);
+    /**
+     * Deserialization path with explicit timestamp.
+     */
+    public MilkEntry(String userInput, LocalDateTime when) {
+        super(TYPE, normalizeVolume(userInput), when);
+        volumeMl = parseVolumeMl(userInput);
     }
 
+    // 5) Methods (static or instance)
+
+    // ---- Static counters (back-compat) ----
     public static void addTotalMilkVol(int milkVol) {
         totalMilkVol += milkVol;
     }
@@ -28,60 +48,57 @@ public class MilkEntry extends Entry {
         totalMilkVol -= milkVol;
     }
 
-
-    public static int getMilkVol(String volFromStorage) {
-        if (volFromStorage.endsWith("ml")) {
-            volFromStorage = volFromStorage.substring(0, volFromStorage.length() - 2);
-        }
-        return Integer.parseInt(volFromStorage);
-    }
-
-    public static int fromList(Entry e) {
-        String line = e.description();
-        return getMilkVol(line);
-    }
-
     public static String toTotalMilk() {
         return "Total breast milk pumped: " + totalMilkVol + "ml";
     }
 
+    public static MilkEntry fromStorage(String line) {
+        String[] parts = line.split("\\|", -1);
+        if (parts.length != 3 || !TYPE.equals(parts[0])) {
+            throw new IllegalArgumentException("Invalid MILK entry line: " + line);
+        }
+        String volume = parts[1];
+        LocalDateTime ts = DateTimeUtil.parse(parts[2].trim());
 
+        // keep your running total behavior during load
+        addTotalMilkVol(parseVolumeMl(volume));
 
-    public String formatDate(LocalDateTime date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm");
-        return date.format(formatter);
-    }
-
-    @Override
-    public String toListLine() {
-        return "[" + type() + "] " + description() + " (" + date + ")";
+        return new MilkEntry(volume, ts);
     }
 
     public String getMilk() {
         return this.description();
     }
 
-    public String getDate() {
-        return this.date;
+    // in MilkEntry
+    public static int volumeMl() {
+        return volumeMl;
+    }
+
+
+    @Override
+    public String toListLine() {
+        // Example: [MILK] 150ml (28/10/25 01:14)
+        return "[" + type() + "] " + description() + " (" + timestampString() + ")";
     }
 
     @Override
     public String toStorageString() {
-        // Stable Storage: MILK|<volume>|<date>
-        return "MILK|" + description() + "|" + date;
+        // MILK|150ml|28/10/25 01:14
+        return withTimestamp(TYPE + "|" + description());
     }
 
-    public static MilkEntry fromStorage(String line) {
-        // Expected: MILK|<volume>|<date> <time>
-        String[] parts = line.split("\\|");
-        String volume = parts[1];
-        String dateStr = parts[2]; // e.g., "22/10/25 11:19"
+    // -------- helpers --------
+    private static int parseVolumeMl(String input) {
+        String s = input.trim().toLowerCase();
+        if (s.endsWith("ml")) {                           // <- braces added/kept to satisfy NeedBraces
+            s = s.substring(0, s.length() - 2);
+        }
+        return Integer.parseInt(s);
+    }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm");
-        LocalDateTime date = LocalDateTime.parse(dateStr, formatter);
-
-        addTotalMilkVol(getMilkVol(volume));
-
-        return new MilkEntry(volume, date);
+    private static String normalizeVolume(String input) {
+        String s = input.trim().toLowerCase();
+        return s.endsWith("ml") ? s : s + "ml";
     }
 }

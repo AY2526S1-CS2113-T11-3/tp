@@ -7,8 +7,8 @@ import java.util.Objects;
  * Base type for all entries (Meal, Pump, Weight, Workout, Note, ...).
  */
 public abstract class Entry {
-    private final String type;         // e.g., MEAL, NOTE
-    private final String description;  // human-readable
+    private final String type;
+    private final String description;
 
     protected Entry(String type, String description) {
         this.type = Objects.requireNonNull(type);
@@ -68,6 +68,10 @@ public abstract class Entry {
 
         case "WEIGHT":
             return WeightEntry.fromStorage(line);
+
+        case "MEASURE":
+            return BodyMeasurementEntry.fromStorage(line);
+
         default:
             throw new IllegalArgumentException("Unknown type: " + parts[0]);
         }
