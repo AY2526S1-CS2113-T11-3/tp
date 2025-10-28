@@ -8,12 +8,12 @@ import seedu.mama.storage.Storage;
 /**
  * Adds the user weight to the list and returns the user's weight in kg
  */
-public class WeightCommand implements Command {
+public class AddWeightCommand implements Command {
     private final int weightInput;
 
     // weight must be a positive number
     // if not positive, we throw an exception handled by calling code
-    public WeightCommand(int weightInput) throws CommandException {
+    public AddWeightCommand(int weightInput) throws CommandException {
         if (weightInput <= 0) {
             throw new CommandException("weightInput must be greater that 0!");
         }

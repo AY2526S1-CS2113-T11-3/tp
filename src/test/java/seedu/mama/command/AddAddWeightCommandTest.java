@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class AddWeightCommandTest {
+public class AddAddWeightCommandTest {
     private EntryList entries;
 
 
@@ -21,7 +21,7 @@ public class AddWeightCommandTest {
 
     @Test
     public void execute_validWeight_addsEntryToList() throws CommandException {
-        WeightCommand command = new WeightCommand(80);
+        AddWeightCommand command = new AddWeightCommand(80);
         CommandResult result = command.execute(entries, null);
 
         assertEquals(1, entries.size());
@@ -32,8 +32,8 @@ public class AddWeightCommandTest {
 
     @Test
     public void execute_multipleWeight_entriesIncrease() throws CommandException {
-        WeightCommand first = new WeightCommand(100);
-        WeightCommand second = new WeightCommand(50);
+        AddWeightCommand first = new AddWeightCommand(100);
+        AddWeightCommand second = new AddWeightCommand(50);
         first.execute(entries, null);
         second.execute(entries, null);
 
