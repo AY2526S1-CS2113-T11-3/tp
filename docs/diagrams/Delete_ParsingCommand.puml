@@ -1,15 +1,26 @@
 @startuml
-title Parsing command
+title Parsing command (Parser constructs DeleteCommand)
+
 skinparam shadowing false
 skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
 
-' Define colors
-!define COLOR_UI #E3F2FD
-!define COLOR_LOGIC #E8F5E9
+actor User
+participant ":Ui" as Ui #E3F2FD
+participant ":Parser" as Par #E8F5E9
+participant ":DeleteCommand" as Del #E8F5E9
 
-rectangle "UI" as ui #E3F2FD
-rectangle "Logic/Parser" as p #E8F5E9
+User -> Ui : enter "delete 2"
+activate Ui
+Ui -> Par : parse("delete 2")
+activate Par
 
-ui -right-> p : delete 2
-p -left-> ui  : DeleteCommand(index=2)
+create Del
+Par -> Del ++ : DeleteCommand(2)
+
+' Return the command object to UI
+Par -->> Ui : Command (DeleteCommand)
+
+deactivate Par
+deactivate Ui
 @enduml

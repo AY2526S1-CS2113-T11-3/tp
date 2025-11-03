@@ -10,10 +10,9 @@ import java.util.logging.Logger;
 
 /**
  * Deletes an entry from the currently shown list by its index.
- * <p>
- * The index is validated against the filtered (shown) view, not the full backing list.
- * Invalid indices, including zero, negatives, or numbers greater than the shown size,
- * will result in a {@link CommandException}.
+ *
+ * <p>The index is validated against the filtered (shown) view, not the full backing list.
+ * Invalid indices (zero, negatives, or greater than shown size) will result in a {@link CommandException}.</p>
  */
 public class DeleteCommand implements Command {
 
@@ -22,7 +21,9 @@ public class DeleteCommand implements Command {
     /**
      * Usage string for help/invalid syntax messages.
      */
-    public static final String MESSAGE_USAGE = "Usage: delete INDEX\n" + "Deletes the entry at INDEX from the currently shown list.\n" + "• INDEX must be a positive whole number (1, 2, 3, ...).";
+    public static final String MESSAGE_USAGE = "Usage: delete INDEX\n"
+            + "Deletes the entry at INDEX from the currently shown list.\n"
+            + "• INDEX must be a positive whole number (1, 2, 3, ...).";
 
     /**
      * One-based index of the entry to delete in the shown list.
@@ -35,6 +36,9 @@ public class DeleteCommand implements Command {
      * @param indexOneBased one-based index (1..N) into the currently shown list
      */
     public DeleteCommand(int indexOneBased) {
+        if (indexOneBased <= 0) {
+            throw new IllegalArgumentException("indexOneBased must be greater than 0");
+        }
         this.indexOneBased = indexOneBased;
     }
 
@@ -47,17 +51,14 @@ public class DeleteCommand implements Command {
      * @return a {@code DeleteCommand} if arguments are valid; otherwise a command that prints usage
      */
     public static Command fromInput(String trimmed) {
-        // split "delete ..." into ["delete", "<arg>"] (at most 2 parts)
         String[] parts = trimmed.split("\\s+", 2);
 
-        // Missing index
         if (parts.length < 2 || parts[1].isBlank()) {
             return (l, s) -> new CommandResult(withUsage("Missing index."));
         }
 
         String arg = parts[1].trim();
 
-        // Non-numeric (strict digits only)
         if (!arg.matches("\\d+")) {
             return (l, s) -> new CommandResult(withUsage("Index must be a positive whole number."));
         }
@@ -69,22 +70,10 @@ public class DeleteCommand implements Command {
             }
             return new DeleteCommand(idx);
         } catch (NumberFormatException e) {
-            // Extremely large number (overflow beyond int)
             return (l, s) -> new CommandResult(withUsage("Index is too large."));
         }
     }
 
-    /**
-     * Executes the delete operation against the provided model and persists the result.
-     *
-     * <p>Validates that the shown list is not empty and the index is within range {@code [1..shownSize]}.
-     * On success, deletes the target entry and saves via {@link Storage#save(EntryList)}.</p>
-     *
-     * @param list    the {@link EntryList} containing entries (non-null)
-     * @param storage the {@link Storage} used to persist changes (non-null)
-     * @return a {@link CommandResult} describing the outcome
-     * @throws CommandException if the shown list is empty, the index is out of bounds, or persistence fails
-     */
     @Override
     public CommandResult execute(EntryList list, Storage storage) throws CommandException {
         Objects.requireNonNull(list, "EntryList is null");
@@ -99,10 +88,12 @@ public class DeleteCommand implements Command {
             throw new CommandException(withUsage("There are no items to delete. The shown list is empty."));
         }
 
-        // Out-of-bounds (0/negative handled in fromInput; keep for defense)
+        // Out-of-bounds (print the current SHOWN list)
         if (indexOneBased <= 0 || indexOneBased > shownSize) {
             LOG.info(() -> "Delete index out of bounds (shown list): " + indexOneBased + " / size=" + shownSize);
-            throw new CommandException(withUsage(String.format("Index %d is out of bounds (shown list). %s", indexOneBased, formatValidRange(shownSize))));
+            String reason = String.format("Index %d is out of bounds (shown list). %s",
+                    indexOneBased, formatValidRange(shownSize));
+            throw new CommandException(reasonWithPreview(reason, list));
         }
 
         final int zeroBasedShown = indexOneBased - 1;
@@ -115,18 +106,27 @@ public class DeleteCommand implements Command {
             return new CommandResult("Deleted: " + removed.toListLine(), false);
 
         } catch (IndexOutOfBoundsException e) {
-            // Filter/view changed mid-execution
+            // Filter/view changed mid-execution: re-check and print preview
             int sizeNow = list.shownSize();
-            LOG.info(() -> "Delete index went out of range during execution: " + indexOneBased + " / size=" + sizeNow);
+            LOG.info(() -> "Delete index went out of range during execution: "
+                    + indexOneBased + " / size=" + sizeNow);
             if (sizeNow == 0) {
                 throw new CommandException(withUsage("There are no items to delete. The shown list is empty."));
             }
-            throw new CommandException(withUsage(String.format("Index %d is out of bounds (shown list). %s", indexOneBased, formatValidRange(sizeNow))));
+            String reason = String.format("Index %d is out of bounds (shown list). %s",
+                    indexOneBased, formatValidRange(sizeNow));
+            throw new CommandException(reasonWithPreview(reason, list));
         } catch (RuntimeException e) {
             LOG.log(Level.SEVERE, "Failed to persist after delete index=" + indexOneBased, e);
-            throw new CommandException(withUsage("Failed to save updated data to disk. Please check your file permissions or try again."), e);
+            throw new CommandException(withUsage(
+                    "Failed to save updated data to disk. Please check your file permissions or try again."
+            ), e);
         }
     }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Helpers (messages + shown preview)
+    // ─────────────────────────────────────────────────────────────────────
 
     /**
      * Formats the valid range sentence.
@@ -140,5 +140,29 @@ public class DeleteCommand implements Command {
      */
     private static String withUsage(String reason) {
         return reason + "\n" + MESSAGE_USAGE;
+    }
+
+    /**
+     * Builds the final reason + usage + shown-list preview string for OOB cases.
+     */
+    private static String reasonWithPreview(String reason, EntryList list) {
+        return withUsage(reason) +
+                "\n" +
+                previewShown(list);
+    }
+
+    /**
+     * Pretty-prints the current SHOWN list exactly as the user sees it.
+     */
+    private static String previewShown(EntryList list) {
+        int n = list.shownSize();
+        if (n == 0) {
+            return "Here are your entries:\n(none)";
+        }
+        StringBuilder sb = new StringBuilder("Here are your entries:");
+        for (int i = 0; i < n; i++) {
+            sb.append("\n").append(i + 1).append(". ").append(list.getShown(i).toListLine());
+        }
+        return sb.toString();
     }
 }

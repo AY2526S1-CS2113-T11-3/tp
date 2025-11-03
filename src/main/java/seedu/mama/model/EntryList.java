@@ -46,7 +46,9 @@ public class EntryList {
      */
     public Entry deleteByShownIndex(int zeroBasedShown) {
         if (zeroBasedShown < 0 || zeroBasedShown >= shown.size()) {
-            throw new IndexOutOfBoundsException("Shown index " + zeroBasedShown + " out of range (size=" + shown.size() + ")");
+            throw new IndexOutOfBoundsException("Shown index " +
+                    zeroBasedShown +
+                    " out of range (size=" + shown.size() + ")");
         }
         Entry target = shown.get(zeroBasedShown);
         int realIndex = indexOf(target);

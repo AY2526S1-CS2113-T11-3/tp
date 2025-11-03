@@ -207,7 +207,10 @@ A success message such as `Deleted: [Workout] yoga (30 mins) (27/10/25 22:24)` i
 If the index is invalid, an error message and the current entry list are shown instead.
 
 ```
-Invalid index: 9
+Error: Index 9 is out of bounds (shown list). Valid range: 1..4.
+Usage: delete INDEX
+Deletes the entry at INDEX from the currently shown list.
+• INDEX must be a positive whole number (1, 2, 3, ...).
 Here are your entries:
 1. [Meal] breakfast (500 kcal)
 2. [Workout] yoga (30 mins) (27/10/25 22:24)
@@ -259,7 +262,7 @@ using `Storage#save(list)`.
 **Step 1 — User issues a command**  
 The user enters, for example:
 ```measure waist/70 hips/98 chest/90 thigh/55 arm/30```
-![AddMeasurement_Initial.png](images/AddMeasurement_Initial.png)
+> ![AddMeasurement_Initial.png](images/AddMeasurement_Initial.png)
 
 The `Ui` captures the raw input.
 
@@ -274,7 +277,7 @@ The `Ui` captures the raw input.
 - **Optional:** `chest`, `thigh`, `arm` if present must be **> 0**.  
   If validation fails → `CommandException`.  
   If valid → create `BodyMeasurementEntry` and append to `EntryList`.
-![ValidationAppendMeasurement.png](images/ValidationAppendMeasurement.png)
+> ![ValidationAppendMeasurement.png](images/ValidationAppendMeasurement.png)
 
 **Step 4.** Persist: `Storage#save(list)`.
 > ![Measure_Persist](images/AddMeasurement_Persist.png)

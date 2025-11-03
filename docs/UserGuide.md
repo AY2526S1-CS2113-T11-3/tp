@@ -204,7 +204,7 @@ Adds a body-weight entry in kilograms.
 
 ### 8. Logging Body Measurements — `measure`
 
-Records body measurements such as waist, hips, or chest.  
+Records body measurements such as waist, hips, chest, thigh and arm.  
 You can include any combination of available fields.
 
 **Format**
@@ -217,6 +217,8 @@ You can include any combination of available fields.
 
 **Notes**
 
+- ```WAIST, HIPS```are mandatory.
+- ```CHEST, THIGH, ARM```are optional.
 - Each field must be a positive integer (in cm).
 - The order of fields does not matter.
 
