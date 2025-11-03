@@ -1,0 +1,48 @@
+@startuml
+title ViewWorkoutGoalCommand — execute
+
+actor User
+participant "UI" as UI #CFE2FF
+participant Parser #D1E7DD
+participant "ViewWorkoutGoalCommand" as ViewCmd #D1E7DD
+participant EntryList #FFF3CD
+participant DateTimeUtil #FFF3CD
+participant WorkoutGoalQueries #FFF3CD
+participant "WorkoutEntry" as W #FFF3CD
+
+
+User -> UI: "workout goal" (view weekly goal)
+UI -> Parser: parse(input)
+Parser --> UI: ViewWorkoutGoalCommand
+
+UI -> ViewCmd: execute(list, storage)
+
+ViewCmd -> DateTimeUtil: weekStartMonday(now)
+DateTimeUtil --> ViewCmd: weekStart
+
+ViewCmd -> WorkoutGoalQueries: currentWeekGoal(list.asList(), weekStart)
+WorkoutGoalQueries --> ViewCmd: goal or null
+
+ViewCmd -> EntryList: asList()
+loop for each Entry e in list
+  alt e is WorkoutEntry
+    ViewCmd -> W: timestamp()        ' from TimestampedEntry
+    ViewCmd -> DateTimeUtil: inSameWeek(ts, weekStart)
+    alt yes (same week)
+      ViewCmd -> W: getDuration()
+      ViewCmd -> ViewCmd: minutesThisWeek += duration
+      ViewCmd -> W: description()
+      ViewCmd -> ViewCmd: append "[Workout] <desc> (<dur> mins) (<ts>)" to list
+    end
+  end
+end
+
+alt goal == null
+  ViewCmd --> UI: CommandResult("No workout goal set...\nWorkouts this week listed above.\nTotal minutes: <sum>")
+else goal present
+  ViewCmd -> ViewCmd: remaining = max(0, goal.minutesPerWeek - minutesThisWeek)
+  ViewCmd --> UI: CommandResult("Target: <goal> mins\nCompleted: <sum> mins\nRemaining: <remaining> mins")
+end
+
+UI -> User: show(message)
+@enduml
