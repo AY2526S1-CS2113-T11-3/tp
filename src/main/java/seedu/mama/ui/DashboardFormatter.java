@@ -46,7 +46,7 @@ public class DashboardFormatter {
             sb.append(String.format("   - Calorie Goal:      %d kcal\n", goal));
             sb.append(String.format("   - Remaining:         %d kcal\n", Math.max(0, remaining)));
         } else {
-            sb.append("   - No calorie goal set. Use 'goal <calories>' to set one.\n");
+            sb.append("   - No calorie goal set. Use 'calorie goal <calories>' to set one.\n");
         }
     }
 

@@ -321,8 +321,8 @@ The command validates basic input, appends a `MealEntry` to `EntryList`, and per
 > ![Meal_Parsing](images/AddMeal_Parsing.png)
 
 **Step 3.** 
-- **Required:** `mealType`, `calorues` must be present and **> 0** (for calories only).
-- **Optional:** `protein`, `carbs`, `fat` if present must be **> 0**.  
+- **Required:** `mealType`, `calories` must be present and **>= 0** (for calories only).
+- **Optional:** `protein`, `carbs`, `fat` if present, must be **>= 0**.  
   If validation fails → `CommandException`.  
   If valid → create `MealEntry` and append to `EntryList`.
 
@@ -513,6 +513,12 @@ a `WeightEntry`.
 
 ---
 
+#### Summary
+
+- **Command:** `weight <weight-kg>`
+- **Example:** `weight 60`
+- **Effect:** Appends a `WeightEntry` and saves immediately.
+
 ### 3.8 Feature: View Dashboard
 
 #### Overview
@@ -555,7 +561,101 @@ The following steps describe the execution flow of the `dashboard` command:
 > **ViewDashboardCommand Sequence Diagram**
 > ![Dashboard Sequence Diagram](images/Dashboard_SequenceDiagram.png)
 
+---
 
+### 3.9 Set and View Calorie Goal — Ibrahim Shoukry
+
+#### Overview
+
+The `calorie goal` feature allows users to set a daily calorie target and view progress against it. The feature stores the latest daily calorie goal 
+in persistent storage and exposes two main user-facing flows:
+- `calorie goal` — view the currently set goal.
+- `calorie goal <CALORIES>` — set a new daily calorie goal which is persisted to storage.
+
+#### Implementation Details
+
+**Step 1.** The user enters for example: `calorie goal 1800`
+
+**Step 2.** `Parser` recognises the `calorie goal` keyword and delegates handling to `CalorieGoalQueries`.
+
+**Step 3.**
+- If a number follows (`calorie goal 1800`): creates `SetCalorieGoalCommand(1800)`.
+- If no number (`calorie goal`): creates a view command to show current goal and progress.
+
+**Step 4.** Command executes using `Storage`:
+- `SetCalorieGoalCommand#execute` → validates input → calls `Storage#saveGoal(int)`.
+- `ViewCalorieGoalCommand#execute` → calls `Storage#loadGoal()` → sums `MealEntry#getCalories()` → prints progress.
+
+**Step 5.** `Ui` displays a message confirming the operation:
+
+- For set: `Calorie goal set to 1800 kcal.`
+
+- For view: `Your current calorie goal is 1800 kcal. Progress: 1200 kcal logged.`
+
+**Class Diagram**
+
+> ![CalorieGoal_ClassDiagram.png](images/CalorieGoal_ClassDiagram.png)
+
+**Sequence Diagram**
+
+> ![CalorieGoal_SequenceDiagram.png](images/CalorieGoal_SequenceDiagram.png)
+
+#### Design Considerations
+
+**Aspect: Input format**
+
+| Alternative               | Pros                    | Cons                           |
+|---------------------------|-------------------------|--------------------------------|
+| **Global goal (current)** | Simple and clear        | Cannot set per-day goals       |
+| **Per-day goals**         | Flexible and historical | More complex storage and logic |
+
+**Aspect: Validation**
+
+| Rule                                  | Rationale                             |
+|---------------------------------------|---------------------------------------|
+| Calories must be non-negative integer | Avoids invalid/negative goal values   |
+| Input must be non-empty               | Prevents missing and unclear commands |
+
+#### Summary
+
+- **Command:** `calorie goal <calories>`, `calorie goal`
+- **Example:** `calorie goal 1800`
+- **Effect:** Stores or views daily `calorie goal`, persists via `Storage`, and displays via `Ui`.
+
+---
+
+### 3.10 Help Command
+
+#### Overview
+
+The `HelpCommand` provides users with a quick reference to all available commands and their correct syntax. When the user enters `help`, the command dynamically generates a formatted list of usage instructions for every command defined in the application.
+
+#### Design
+
+The `HelpCommand` is designed for simplicity and maintainability, adhering to the **Single Responsibility Principle (SRP)** and the **Open/Closed Principle (OCP)**.
+
+| Component              | Description                                                                                                                                          |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **`HelpCommand`**      | A simple command class whose only responsibility is to retrieve and format the help message. It does not contain any complex logic itself.           |
+| **`CommandType` Enum** | This enum acts as the **single source of truth** for all command usage strings. The `HelpCommand` reads directly from this enum to build its output. |
+| **Flow of Control**    | `Parser` → `HelpCommand` → `CommandType` → `CommandResult` → `Ui`                                                                                    |
+
+This design is highly maintainable. To add a new command to the help message, a developer only needs to add a new entry to the `CommandType` enum. The `HelpCommand` will automatically include it without needing any code changes, thus satisfying the Open/Closed Principle.
+
+#### Implementation Steps
+
+1.  The user enters the `help` command.
+2.  The main `Parser` recognizes the keyword and creates a `new HelpCommand()`.
+3.  The `HelpCommand#execute()` method is called.
+4.  Inside `execute()`, it calls the static method `CommandType.getFormattedUsage()` to get a single string containing all command formats.
+5.  This string is then wrapped in a `CommandResult` and returned to the `Ui` to be displayed to the user.
+
+#### Summary
+
+* **Command:** `help`
+* **Effect:** Displays a list of all commands and their formats.
+* **Key Design:** Leverages the `CommandType` enum as a single source of truth for maintainability.
+---
 ## Product Scope
 
 ### Target User Profile

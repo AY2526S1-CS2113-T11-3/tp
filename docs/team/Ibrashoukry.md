@@ -22,8 +22,7 @@ My primary contributions focused on implementing the **core data entry commands 
   Records a meal with a specified calories in kcal (e.g., `meal /cal 500`). Automatically updates and displays the total amount of calories recorded so far.
 
 * **Justification:**  
-  Enables mothers to track their calorie intake to keep a healthy diet for recovery and to make sure that the mother is getting enough calories
-* for produce a healthy milk output.
+  Enables mothers to track their calorie intake to keep a healthy diet for recovery and to make sure that the mother is getting enough calories to a healthy milk output.
 
 * **Highlights:**
     * Implemented `AddMealCommand` using the **Command design pattern**, promoting modularity and easy extensibility for future features.
