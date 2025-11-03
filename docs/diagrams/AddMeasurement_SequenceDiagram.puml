@@ -19,7 +19,7 @@ participant ":AddMeasurementCommand" as AMC #C8E6C9
 participant ":EntryList"    as LIST #FFFDE7
 participant ":Storage"      as ST   #FCE4EC
 
-User -> UI : enter "measure waist/70 hips/98\n chest/90 thigh/55 arm/30"
+User -> UI : enter "measure waist/70 hips/98 \nchest/90 thigh/55 arm/30"
 activate UI
 UI -> PR  : parse(raw)
 activate PR

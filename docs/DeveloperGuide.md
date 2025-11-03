@@ -283,8 +283,7 @@ The `Ui` captures the raw input.
 ```Added: [MEASURE] waist=70cm, hips=98cm, chest=90cm, thigh=55cm, arm=30cm (28/10/25 02:53)```.
 
 > **AddMeasurement Sequence Diagram**
-![AddMeasurement_SequenceDiagram.png](images/AddMeasurement_SequenceDiagram.png)
-> 
+> ![AddMeasurement_SequenceDiagram.png](images/AddMeasurement_SequenceDiagram.png)
 #### Design Considerations
 
 **Aspect: Required vs optional fields**
