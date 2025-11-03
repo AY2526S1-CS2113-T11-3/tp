@@ -1,5 +1,23 @@
 # User Guide
-
+## Table of Contents
+- [Introduction](#introduction)
+- [Quick Start](#quick-start)
+- [Features](#features)
+  - [List](#1-viewing-entries--list)
+  - [Delete](#2-deleting-an-entry--delete)
+  - [Meal](#3-logging-a-meal--meal)
+  - [Workout](#4-logging-a-workout--workout)
+  - [Workout Goal](#5-managing-workout-goals--workout-goal)
+  - [Milk](#6-logging-milk-volume--milk)
+  - [Weight](#7-logging-weight--weight)
+  - [Body Measure](#8-logging-body-measurements--measure)
+  - [Calorie Goal](#9-calorie-goal--calorie-goal)
+  - [Dashboard](#10-exiting-the-program--bye)
+  - [Bye](#10-exiting-the-program--bye)
+  - [Help](#11-getting-help--help)
+- [Data File](#data-file)
+- [FAQ](#faq)
+- [Command Summary](#command-summary)
 ---
 
 ## Introduction
