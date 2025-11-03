@@ -1,18 +1,26 @@
 @startuml
-' ===== Parsing command =====
-title Parsing command
+title Parsing command (Parser constructs AddMeasurementCommand)
 
 skinparam shadowing false
 skinparam defaultFontName Arial
-skinparam rectangle {
-  RoundCorner 12
-  FontSize 14
-}
+skinparam sequenceMessageAlign center
 
-rectangle "UI" as UI #E3F2FD
-rectangle "Logic/Parser" as P #E8F5E9
+actor User
+participant ":Ui" as Ui #E3F2FD
+participant ":Parser" as Par #E8F5E9
+participant ":AddMeasurementCommand" as AddM #E8F5E9
 
-UI -right-> P : measure waist/70 hips/98 chest/90 thigh/55 arm/30
-P -left-> UI  : AddMeasurementCommand(70,98,90,55,30)
+User -> Ui : enter "measure waist/70 hips/98 chest/90 thigh/55 arm/30"
+activate Ui
+Ui -> Par : parse("measure waist/70 hips/98 chest/90 thigh/55 arm/30")
+activate Par
 
+create AddM
+Par -> AddM ++ : AddMeasurementCommand(70, 98, 90, 55, 30)
+
+' Return the constructed command to the UI
+Par -->> Ui : Command (AddMeasurementCommand)
+
+deactivate Par
+deactivate Ui
 @enduml

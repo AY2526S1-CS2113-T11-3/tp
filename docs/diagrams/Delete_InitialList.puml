@@ -1,31 +1,27 @@
-@startuml
-title **Initial State (before delete)**
+@startuml ValidationAppendDelete
+title Initial State (before delete)
 
-skinparam shadowing false
-skinparam defaultFontName Arial
-skinparam roundcorner 15
-skinparam packageStyle rectangle
-skinparam rectangle {
+skinparam component {
   BorderColor black
   BackgroundColor white
+  FontSize 12
 }
 
-' --- Color definitions ---
-!define FRAME   #F2F4F7
-!define CARD    #FFF8E1
-!define POINTER #E3F2FD
-
-' Force top-to-bottom layout
-top to bottom direction
-
-' === EntryList frame with horizontal entries ===
-rectangle "EntryList (States)" as frame FRAME {
-  left to right direction
-  rectangle "1. [Meal] breakfast (500 kcal)" as e1 CARD
-  rectangle "2. [Workout] yoga (30 mins) (27/10/25 22.24)" as e2 CARD
-  rectangle "3. [Milk] 150ml (27/10/25 22:27)" as e3 CARD
-  e1 -[hidden]-> e2
-  e2 -[hidden]-> e3
+' Define the object instances
+object "EntryList (before)" as EL_B
+object "MealEntry" as MA {
+  [MILK] 150ml (dd/MM/yy HH:mm)
 }
+
+object "WorkoutEntry" as MB {
+  [MILK] 150ml (dd/MM/yy HH:mm)
+}
+object "MilkEntry" as MC {
+  [MILK] 150ml (dd/MM/yy HH:mm)
+}
+
+EL_B o-- MB : contains
+EL_B o-- MA : contains
+EL_B o-- MC : contains
 
 @enduml
