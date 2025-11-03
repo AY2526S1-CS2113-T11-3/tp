@@ -180,6 +180,7 @@ Records a milk-pumping session in millilitres (ml).
 **Notes**
 
 - `VOLUME` must be a non-negative integer.
+- 'VOLUME' must be a whole number
 - Each entry records the date and time automatically.
 
 ---
@@ -193,12 +194,12 @@ Adds a body-weight entry in kilograms.
 
 
 **Examples**
-```weight 70```
-```weight 63```
+```weight 70.23```
+```weight 63.50```
 
 **Notes**
 
-- The value must be a whole number.
+- The value can have decimal places, maximum up to two decimal places.
 
 ---
 
@@ -371,16 +372,16 @@ Each entry is stored on a separate line, using the `|` character as a separator.
 
 ## Command Summary
 
-| Command             | Format                                                                      | Example                    |
-|---------------------|-----------------------------------------------------------------------------|----------------------------|
-| **List**            | `list` or `list /t TYPE`                                                    | `list /t meal`             |
-| **Delete**          | `delete INDEX`                                                              | `delete 2`                 |
-| **Add Meal**        | `meal MEAL_NAME /cal CALORIES [/protein PROTEIN] [/carbs CARBS] [/fat FAT]` | `meal breakfast /cal 500`  |
-| **Add Workout**     | `workout TYPE /dur DURATION`                                                | `workout yoga /dur 30`     |
-| **Workout Goal**    | `workout goal [MINUTES]`                                                    | `workout goal 150`         |
-| **Add Milk**        | `milk VOLUME`                                                               | `milk 150`                 |
-| **Add Weight**      | `weight VALUE`                                                              | `weight 70`                |
-| **Add Measurement** | `measure waist/WAIST hips/HIPS [chest/CHEST] [thigh/THIGH] [arm/ARM]`       | `measure waist/78 hips/92` |
-| **Calorie Goal**    | `calorie goal [CALORIES]` or `calorie goal`                                 | `calorie goal 1800`        |
-| **Exit**            | `bye`                                                                       | `bye`                      |
+| Command             | Format                                                                      | Example                        |
+|---------------------|-----------------------------------------------------------------------------|--------------------------------|
+| **List**            | `list` or `list /t TYPE`                                                    | `list /t meal`                 |
+| **Delete**          | `delete INDEX`                                                              | `delete 2`                     |
+| **Add Meal**        | `meal MEAL_NAME /cal CALORIES [/protein PROTEIN] [/carbs CARBS] [/fat FAT]` | `meal breakfast /cal 500`      |
+| **Add Workout**     | `workout TYPE /dur DURATION /feel FEEL`                                     | `workout yoga /dur 30 /feel 1` |
+| **Workout Goal**    | `workout goal [MINUTES]`                                                    | `workout goal 150`             |
+| **Add Milk**        | `milk VOLUME`                                                               | `milk 150`                     |
+| **Add Weight**      | `weight VALUE`                                                              | `weight 70`                    |
+| **Add Measurement** | `measure waist/WAIST hips/HIPS [chest/CHEST] [thigh/THIGH] [arm/ARM]`       | `measure waist/78 hips/92`     |
+| **Calorie Goal**    | `calorie goal [CALORIES]` or `calorie goal`                                 | `calorie goal 1800`            |
+| **Exit**            | `bye`                                                                       | `bye`                          |
 
