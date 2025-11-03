@@ -36,7 +36,7 @@ public class WeightEntry extends Entry {
     /**
      * Converts the entry to a string suitable for storage.
      *
-     * @return String in format "WEIGHT|<weightValue>"
+     * @return String in format "WEIGHT|weightValue"
      */
     @Override
     public String toStorageString() {

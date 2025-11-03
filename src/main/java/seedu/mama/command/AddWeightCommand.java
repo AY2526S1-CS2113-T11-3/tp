@@ -17,7 +17,8 @@ public class AddWeightCommand implements Command {
      *
      * @param weightInput The user's weight input.
      * @throws CommandException If the input weight is not greater than zero.
-     */    public AddWeightCommand(double weightInput) throws CommandException {
+     */
+    public AddWeightCommand(double weightInput) throws CommandException {
         if (weightInput <= 0) {
             throw new CommandException("weightInput must be greater that 0!");
         }

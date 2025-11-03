@@ -38,7 +38,7 @@ public class AddMilkCommand implements Command {
 
     /**
      * Parses user input and returns a new AddMilkCommand.
-     * Expected format: "milk <volume>"
+     * Expected format: "milk volume"
      */
     public static AddMilkCommand fromInput(String input) throws CommandException {
         String desc = input.substring("milk".length()).trim();
