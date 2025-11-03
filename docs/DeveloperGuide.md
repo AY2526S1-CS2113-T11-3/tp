@@ -283,8 +283,8 @@ The `Ui` captures the raw input.
 ```Added: [MEASURE] waist=70cm, hips=98cm, chest=90cm, thigh=55cm, arm=30cm (28/10/25 02:53)```.
 
 > **AddMeasurement Sequence Diagram**
-> ![AddMeasurement_Sequence](images/AddMeasurement_SequenceDiagram.png)
-
+![AddMeasurement_SequenceDiagram.png](images/AddMeasurement_SequenceDiagram.png)
+> 
 #### Design Considerations
 
 **Aspect: Required vs optional fields**
@@ -314,8 +314,7 @@ The command validates basic input, appends a `MealEntry` to `EntryList`, and per
 
 **Step 1.** The user enters for example:
 ```add meal breakfast /cal 500 /protein 25 /carbs 10 /fat 14```
-
-> ![Meal_Initial](images/AddMeal_Initial.png)
+![AddMeal_Initial.png](images/AddMeal_Initial.png)
 
 **Step 2.** `Parser` recognises `add meal` and constructs `AddMealCommand(description="breakfast", calories=500, protein=25, carbs=10, fat=14)`.
 > ![Meal_Parsing](images/AddMeal_Parsing.png)
@@ -325,16 +324,14 @@ The command validates basic input, appends a `MealEntry` to `EntryList`, and per
 - **Optional:** `protein`, `carbs`, `fat` if present, must be **>= 0**.  
   If validation fails → `CommandException`.  
   If valid → create `MealEntry` and append to `EntryList`.
-
-> ![Meal_ValidationAndAppend](images/AddMeal_ValidationAndAppend.png)
-
+![ValidationAppendMeal.png](images/ValidationAppendMeal.png)
+- 
 **Step 4.** `Storage#save(list)` is called to write the updated list to `mama.txt`.
 > ![Meal_Persist](images/AddMeal_Persist.png)
 
 **Step 5.** `Ui` prints the result (e.g., `Got it. I've logged this meal:
   [Meal] breakfast (500 kcal) [protein:25g carbs:10g fat:14g]`).
-
-> ![AddMeal_Sequence](images/AddMeal_SequenceDiagram.png)
+![AddMeal_SequenceDiagram.png](images/AddMeal_SequenceDiagram.png)
 
 #### Design Considerations
 
@@ -449,10 +446,9 @@ a `MilkEntry`.
 
 **Step 4.** `Storage#save(list)` persists the updated list.
 > ![Milk_Persist](images/AddMilk_Persist.png)
-
 **Step 5.** `Ui` shows `Added: [Milk] 150ml`.
-> ![AddMilk_Sequence](images/AddMilk_SequenceDiagram.png)
-
+![AddMilk_SequenceDiagram.png](images/AddMilk_SequenceDiagram.png)
+> 
 #### Design Considerations
 
 **Aspect: Volume input**
@@ -495,7 +491,6 @@ a `WeightEntry`.
 
 **Step 5.** `Ui` shows `Added: [WEIGHT] 60.00kg`.
 ![AddWeight_SequenceDiagram.png](images/AddWeight_SequenceDiagram.png)
-
 #### Design Considerations
 
 **Aspect: Weight input**

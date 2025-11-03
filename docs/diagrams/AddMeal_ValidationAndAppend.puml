@@ -1,18 +1,25 @@
-@startuml
+@startuml ValidationAppendMeal
 title Validation & Append
 
-skinparam shadowing false
-skinparam defaultFontName Arial
-skinparam rectangle {
-  RoundCorner 12
-  FontSize 14
+skinparam component {
+  BorderColor black
+  BackgroundColor white
+  FontSize 12
 }
 
-rectangle "EntryList (before)" as BEFORE #EEF1F4
-
-rectangle "EntryList (after)" as AFTER #EEF1F4 {
-  rectangle "[Meal] breakfast (500 kcal) \n[protein:25g carbs:10g fat:14g]" as ITEM #FFF2CC
+' Define the object instances
+object "EntryList (before)" as EL_B
+object "EntryList (after)" as EL_A {
+}
+object "Meal" as ME {
+  [Meal] breakfast (500 kcal) \n[protein:25g carbs:10g fat:14g]
 }
 
-BEFORE -right-> AFTER : append new MealEntry
+' 1. Show the action (Append)
+EL_B -right-> EL_A : append new MealEntry
+
+' 2. Show the containment/link relationship
+'    The EntryList (after) contains the new MealEntry
+EL_A o-- ME : contains
+
 @enduml

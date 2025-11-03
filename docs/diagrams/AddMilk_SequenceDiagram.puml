@@ -23,6 +23,7 @@ activate UI
 UI -> PR  : parse(raw)
 activate PR
 PR --> UI  : new AddMilkCommand(30)
+deactivate PR
 UI -> AMC : execute(list, storage)
 activate AMC
 
@@ -32,9 +33,12 @@ else valid input
   AMC -> LIST : add new MilkEntry
   activate LIST
   AMC -> ST   : save(list)
+
   activate ST
   ST --> AMC  : ok
+  deactivate ST
   AMC --> UI  : CommandResult
+  deactivate AMC
 end
 
 @enduml

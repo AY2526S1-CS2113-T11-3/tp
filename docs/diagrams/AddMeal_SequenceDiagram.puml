@@ -13,23 +13,30 @@ skinparam sequence {
 }
 
 actor User
-participant Ui           as UI  #E3F2FD
-participant Parser       as PR  #E8F5E9
-participant AddMealCommand as AMC #C8E6C9
-participant EntryList    as LIST #FFFDE7
-participant Storage      as ST   #FCE4EC
+participant ":Ui"           as UI  #E3F2FD
+participant ":Parser"       as PR  #E8F5E9
+participant ":AddMealCommand" as AMC #C8E6C9
+participant ":EntryList"    as LIST #FFFDE7
+participant ":Storage"    as ST   #FCE4EC
 
-User -> UI : enter "meal breakfast /cal 500 /protein 25 /carbs 10 /fat 14"
+User -> UI : enter "meal breakfast\n /cal 500 /protein 25 /carbs 10 /fat 14"
+activate UI
 UI -> PR  : parse(raw)
+activate PR
 PR --> UI  : new AddMealCommand("breakfast",500,25,10,14)
+deactivate PR
 UI -> AMC : execute(list, storage)
+activate AMC
 
 opt invalid input (missing/≤0)
-  AMC -> UI : throw CommandException\n("Calories must be a non-negative number ...")
+  AMC --> UI : throw CommandException\n("Calories must be a non-negative number ...")
 else valid input
   AMC -> LIST : add(new MealEntry(...))
+  activate LIST
   AMC -> ST   : save(list)
+  activate ST
   ST --> AMC  : ok
+  deactivate ST
   AMC --> UI  : CommandResult("Got it. I've logged this meal...")
 end
 

@@ -13,24 +13,32 @@ skinparam sequence {
 }
 
 actor User
-participant Ui           as UI  #E3F2FD
-participant Parser       as PR  #E8F5E9
-participant AddWeightCommand as AMC #C8E6C9
-participant EntryList    as LIST #FFFDE7
-participant Storage      as ST   #FCE4EC
+participant ":Ui"           as UI  #E3F2FD
+participant ":Parser"       as PR  #E8F5E9
+participant ":AddWeightCommand" as AMC #C8E6C9
+participant ":EntryList"    as LIST #FFFDE7
+participant ":Storage"      as ST   #FCE4EC
 
 User -> UI : enter "weight 60"
+activate UI
 UI -> PR  : parse(raw)
+activate PR
 PR --> UI  : new AddWeightCommand(60)
+deactivate PR
 UI -> AMC : execute(list, storage)
+activate AMC
 
 opt invalid input (missing/≤0)
   AMC -> UI : throw CommandException\n("Weight must be a number ...")
 else valid input
   AMC -> LIST : add(new WeightEntry(...))
+  activate LIST
   AMC -> ST   : save(list)
+  activate ST
   ST --> AMC  : ok
-  AMC --> UI  : CommandResult("Added: [WEIGHT] 60kg")
+  deactivate ST
+  AMC --> UI  : CommandResult("Added: [WEIGHT] 60.00kg")
+  deactivate AMC
 end
 
 @enduml
