@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import seedu.mama.util.DateTimeUtil;
 
 /**
- * Represents a milk-pumping session.
+ * Represents a breast milk pumping session entry.
  */
 public class MilkEntry extends TimestampedEntry {
 
@@ -22,7 +22,9 @@ public class MilkEntry extends TimestampedEntry {
     // 4) Constructors (ALL ctors before any methods)
 
     /**
-     * New entries created from user input. Timestamp = now().
+     * Constructs a new MilkEntry from user input.
+     * Timestamp defaults to now().
+     * @param userInput e.g., "150"
      */
     public MilkEntry(String userInput) {
         super(TYPE, normalizeVolume(userInput));
@@ -52,6 +54,12 @@ public class MilkEntry extends TimestampedEntry {
         return "Total breast milk pumped: " + totalMilkVol + "ml";
     }
 
+    /**
+     * Creates a MilkEntry from a storage string.
+     *
+     * @param line The line from storage, e.g., "MILK|150ml|28/10/25 01:14"
+     * @return MilkEntry object
+     */
     public static MilkEntry fromStorage(String line) {
         String[] parts = line.split("\\|", -1);
         if (parts.length != 3 || !TYPE.equals(parts[0])) {
@@ -66,6 +74,7 @@ public class MilkEntry extends TimestampedEntry {
         return new MilkEntry(volume, ts);
     }
 
+    /** Returns the description of milk volume */
     public String getMilk() {
         return this.description();
     }
@@ -74,7 +83,6 @@ public class MilkEntry extends TimestampedEntry {
     public static int volumeMl() {
         return volumeMl;
     }
-
 
     @Override
     public String toListLine() {
@@ -89,6 +97,10 @@ public class MilkEntry extends TimestampedEntry {
     }
 
     // -------- helpers --------
+    /**
+     * Converts a string input into an integer volume in ml.
+     * @return volume in ml
+     */
     private static int parseVolumeMl(String input) {
         String s = input.trim().toLowerCase();
         if (s.endsWith("ml")) {                           // <- braces added/kept to satisfy NeedBraces
@@ -97,6 +109,12 @@ public class MilkEntry extends TimestampedEntry {
         return Integer.parseInt(s);
     }
 
+    /**
+     * Ensures the volume string ends with "ml".
+     *
+     * @param input User input
+     * @return normalized string e.g., "150ml"
+     */
     private static String normalizeVolume(String input) {
         String s = input.trim().toLowerCase();
         return s.endsWith("ml") ? s : s + "ml";
