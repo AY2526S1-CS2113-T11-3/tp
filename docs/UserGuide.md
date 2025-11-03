@@ -56,7 +56,8 @@ Mama is lightweight, works entirely **offline**, and runs on any system with Jav
 This section explains each command in Mama.  
 Features marked with *Coming soon* are not yet implemented in this version.
 
----
+`All command inputs will be in lowercase`
+
 
 ### 1. Viewing Entries — `list`
 
@@ -200,6 +201,7 @@ Records a milk-pumping session in millilitres (ml).
 - `VOLUME` must be a whole number
 - `VOLUME` is measured in `ml`
 - Each entry records the date and time automatically.
+- Having no space between milk and <volume> does not affect the functionality of the command
 
 ---
 
