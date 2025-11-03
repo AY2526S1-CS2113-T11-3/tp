@@ -16,14 +16,14 @@ import java.util.logging.Logger;
  */
 public class DeleteCommand implements Command {
 
-    private static final Logger LOG = Logger.getLogger(DeleteCommand.class.getName());
-
     /**
      * Usage string for help/invalid syntax messages.
      */
     public static final String MESSAGE_USAGE = "Usage: delete INDEX\n"
             + "Deletes the entry at INDEX from the currently shown list.\n"
             + "• INDEX must be a positive whole number (1, 2, 3, ...).";
+
+    private static final Logger LOG = Logger.getLogger(DeleteCommand.class.getName());
 
     /**
      * One-based index of the entry to delete in the shown list.

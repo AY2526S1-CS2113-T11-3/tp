@@ -58,7 +58,7 @@ public class DeleteCommandTest {
     }
 
     @Test
-    public void execute_invalidIndex_throwsCommandException_andShowsPreview() {
+    public void execute_invalidIndex_showsPreview() {
         // shown size is 3, so 5 is OOB
         DeleteCommand cmd = new DeleteCommand(5);
 
@@ -81,7 +81,7 @@ public class DeleteCommandTest {
     }
 
     @Test
-    public void execute_emptyShownList_throwsCommandException_withUsage() {
+    public void execute_emptyShownList_throwsUsageMessage() {
         // Clear the list so shown is empty
         // (You can either clear via internal API or recreate)
         list = new EntryList(); // fresh, empty shown view
