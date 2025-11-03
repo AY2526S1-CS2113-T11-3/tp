@@ -162,6 +162,9 @@ The following steps describe the process for a user command like `list /t meal`:
 6.  `ListCommand#execute()` calls `entryList.setFilter(predicate)`, which updates the internal "shown" list to contain only meal entries.
 7.  The command then formats the *newly filtered* "shown" list into a string and returns it in a `CommandResult` to be displayed by the `Ui`.
 
+**NOTE:**
+`Doesn't matter if there's a space between "list" and "/t"`
+
 > **ListCommand Sequence Diagram**
 > ![ListCommand Sequence Diagram](images/ListCommandSequenceDiagram.png)
 

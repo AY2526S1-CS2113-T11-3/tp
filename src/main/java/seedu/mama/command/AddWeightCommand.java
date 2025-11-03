@@ -6,13 +6,18 @@ import seedu.mama.model.WeightEntry;
 import seedu.mama.storage.Storage;
 
 /**
- * Adds the user weight to the list and returns the user's weight in kg
+ * Represents a command that adds a new weight entry to the list.
  */
 public class AddWeightCommand implements Command {
+    /** The weight value entered by the user (in kilograms). */
     private final double weightInput;
 
-    // weight must be a positive number
-    // if not positive, we throw an exception handled by calling code
+    /**
+     * Constructs a new AddWeightCommand with the specified weight input.
+     *
+     * @param weightInput The user's weight input.
+     * @throws CommandException If the input weight is not greater than zero.
+     */
     public AddWeightCommand(double weightInput) throws CommandException {
         if (weightInput <= 0) {
             throw new CommandException("weightInput must be greater that 0!");
@@ -21,10 +26,24 @@ public class AddWeightCommand implements Command {
         this.weightInput = weightInput;
     }
 
+    /**
+     * Rounds a double value to two decimal places.
+     *
+     * @param value The value to round.
+     * @return The value rounded to two decimal places.
+     */
     public static double roundToTwoDecimalPlaces(double value) {
         return Math.round(value * 100.0) / 100.0;
     }
 
+    /**
+     * Adds a WeightEntry to the list, persists the list if storage is provided,
+     *
+     * @param list    mutable list to append the new entry to
+     * @param storage optional storage; if non-null, list is saved
+     * @return command feedback for the user
+     * @throws CommandException if execution fails (e.g., storage error)
+     */
     @Override
     public CommandResult execute(EntryList list, Storage storage) {
         // Use an assertion to check for internal errors
