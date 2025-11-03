@@ -11,7 +11,7 @@ skinparam component {
 object "EntryList (before)" as EL_B
 object "EntryList (after)" as EL_A {
 }
-object "MilkEntry" as ME {
+object "Meal" as ME {
   [MILK] 30ml (dd/MM/yy HH:mm)
 }
 

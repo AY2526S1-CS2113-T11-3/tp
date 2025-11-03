@@ -106,7 +106,7 @@ public class Parser {
         }
 
         // Handles "workout " command
-        if (trimmed.toLowerCase().startsWith("workout ")) {
+        if (trimmed.toLowerCase().startsWith("workout")) {
             return AddWorkoutCommand.fromInput(trimmed);
         }
 

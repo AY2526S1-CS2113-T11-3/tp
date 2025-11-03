@@ -1,6 +1,6 @@
 @startuml
-' ===== Initial State (before meal) =====
-title Initial State (before meal)
+' ===== Initial State (before addMeal) =====
+title Initial State (before add meal)
 
 skinparam shadowing false
 skinparam defaultFontName Arial
@@ -14,14 +14,15 @@ skinparam note {
   RoundCorner 12
 }
 
-rectangle "EntryList (States)" as EL #F5F7FA {
-  ' empty before adding a measurement
+class EntryList {
+
 }
 
 ' show "current state" pointer
 note as CS #E3F2FD
 Current State (before `meal`)
+Nothing is contained inside EntryList
 end note
-CS -up-> EL
+CS -up-> EntryList
 
 @enduml
