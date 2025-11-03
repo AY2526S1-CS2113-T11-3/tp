@@ -1,4 +1,4 @@
-# **Ong Yu Jie — Project Portfolio Page**
+# **Jewel Jace Lim — Project Portfolio Page**
 
 ## **Project: MAMA**
 
