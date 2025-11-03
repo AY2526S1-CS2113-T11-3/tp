@@ -1,0 +1,76 @@
+@startuml
+skinparam defaultFontName Arial
+
+
+title Calorie Goal Feature - Class Diagram
+
+
+!define LOGIC #D1E7DD
+!define MODEL #FFF3CD
+!define STOR #F8D7DA
+!define UI #CFE2FF
+
+
+package "command" LOGIC {
+interface Command
+class CommandResult
+
+
+class SetCalorieGoalCommand implements Command {
+- calorieGoal: int
++ execute(list: EntryList, storage: Storage): CommandResult
+}
+
+
+class ViewCalorieGoalCommand implements Command {
++ execute(list: EntryList, storage: Storage): CommandResult
+}
+
+
+class CalorieGoalQueries {
++ setCalorieGoal(input: String): Command
++ viewCalorieGoal(): Command
+}
+}
+
+
+package "model" MODEL {
+class Entry
+class MealEntry extends Entry {
++ getCalories(): int
+}
+class CalorieGoalEntry extends Entry {
+- calorieGoal: int
++ toStorageString(): String
++ static fromStorage(String): CalorieGoalEntry
+}
+class EntryList {
++ asList(): List<Entry>
+}
+}
+
+
+package "storage" STOR {
+class Storage {
++ saveGoal(goal: int)
++ loadGoal(): Integer
+}
+}
+
+
+package "ui" UI {
+class Ui
+}
+
+
+' --- Relationships ---
+CalorieGoalQueries --> SetCalorieGoalCommand : "creates"
+CalorieGoalQueries --> ViewCalorieGoalCommand : "creates"
+SetCalorieGoalCommand --> Storage : "saveGoal(int)"
+ViewCalorieGoalCommand --> Storage : "loadGoal()"
+ViewCalorieGoalCommand --> EntryList : "read meals"
+MealEntry --> Entry : "extends"
+CalorieGoalEntry --> Entry : "extends"
+EntryList --> Entry : "contains *"
+Ui --> CommandResult : "displays output"
+@enduml

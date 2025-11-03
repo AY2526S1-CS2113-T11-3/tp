@@ -22,8 +22,7 @@ My primary contributions focused on implementing the **core data entry commands 
   Records a meal with a specified calories in kcal (e.g., `meal /cal 500`). Automatically updates and displays the total amount of calories recorded so far.
 
 * **Justification:**  
-  Enables mothers to track their calorie intake to keep a healthy diet for recovery and to make sure that the mother is getting enough calories
-* for produce a healthy milk output.
+  Enables mothers to track their calorie intake to keep a healthy diet for recovery and to make sure that the mother is getting enough calories to produce a healthy milk output.
 
 * **Highlights:**
     * Implemented `AddMealCommand` using the **Command design pattern**, promoting modularity and easy extensibility for future features.
@@ -80,6 +79,10 @@ My primary contributions focused on implementing the **core data entry commands 
     * Described interactions between `AddMealCommand`, `MealEntry`, `EntryList`, and `Storage` during execution.
 * Included multiple **sequence and process diagrams** (e.g., parsing, validation, persistence) to visualize control flow and data propagation.
 * Documented the **MealEntry model design**, showing how it encapsulates macronutrient data and supports persistence through `toStorageString()` and `fromStorage()`.
+* Added comprehensive documentation for **SetCalorieGoalCommand**, detailing its purpose, structure, and workflow.
+  * Explained command parsing via `Parser` and how it determines which function that follows (setting a goal or viewing a goal) by sending it to `CalorieGoalQueries`.
+  * Illustrated validation flow for mandatory and optional parameters with appropriate error handling using `CommandException`.
+  * Described interactions between `SetCalorieGoalCommand`, `CalorieGoalEntry`, `CalorieGoalQueries`, and `Storage` during execution.
 * Provided detailed **design considerations** comparing alternative input methods and validation strategies.
 * Emphasized compliance with **SOLID principles** — particularly **SRP** (each class has a distinct responsibility) and **OCP** (commands can be easily extended with new features).
 * Added a concise **summary section** outlining command syntax, example usage, and resultant system behavior.

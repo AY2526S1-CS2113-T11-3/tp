@@ -1,0 +1,58 @@
+@startuml
+title ViewCalorieGoalCommand - Sequence Diagram
+
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequence {
+  LifeLineBorderColor black
+  BoxBorderColor #90A4AE
+  BoxBackgroundColor #F5F7FA
+  ArrowColor #455A64
+  ArrowThickness 1
+}
+
+actor User
+
+participant Ui           as UI  #CFE2FF
+participant Parser       as PR  #CFE2FF
+participant ViewCalorieGoalCommand as VCG #D1E7DD
+participant Storage      as ST   #F8D7DA
+participant EntryList    as EL   #FFF3CD
+participant CalorieGoalSummary as CGS #FFF3CD
+participant CalorieGoalFormatter as CGF #CFE2FF
+participant CommandResult as CR   #D1E7DD
+
+User -> UI : enter "calorie goal"
+UI -> PR : parse(raw)
+PR --> UI : returns Command (VCG)
+UI -> VCG : execute(list, storage)
+
+VCG -> ST : loadGoal()
+activate ST
+ST --> VCG : Integer goal (e.g., 1800)
+deactivate ST
+
+alt goal is null
+  VCG -> UI : return CommandResult("No calorie goal set yet. Use: calorie goal <calories>")
+else goal exists
+  VCG -> EL : asList()
+  activate EL
+  EL --> VCG : [MealEntry...]
+  deactivate EL
+
+  VCG -> CGS : new CalorieGoalSummary(goal, entries)
+  activate CGS
+  CGS --> VCG : CalorieGoalSummary
+  deactivate CGS
+
+  VCG -> CGF : format(summary)
+  activate CGF
+  CGF --> VCG : formattedText
+  deactivate CGF
+
+  VCG -> CR : new CommandResult(formattedText)
+  CR --> UI : deliver formatted result
+end
+
+UI --> User : display result
+@enduml

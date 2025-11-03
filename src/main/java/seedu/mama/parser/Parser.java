@@ -49,6 +49,9 @@ public class Parser {
     public static Command parse(String input) throws CommandException {
         String trimmed = input.trim();
         String lower = trimmed.toLowerCase();
+        if (lower.contains("|")) {
+            throw new CommandException("Invalid command arguments! No | allowed!");
+        }
 
         // Handles the "bye" command (terminates the program)
         if (lower.equals("bye")) {

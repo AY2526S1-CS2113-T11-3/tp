@@ -1,5 +1,32 @@
 # Developer Guide
-
+## Table of Contents
+- [Developer Guide](#developer-guide)
+    - [Acknowledgements](#acknowledgements)
+    - [Design & Implementation](#design--implementation)
+        - [Architecture](#21-Architecture)
+        - [UI Component](#22-ui-component)
+        - [Logic Component](#23-logic-component)
+        - [Model Component](#24-model-component)
+        - [Storage Component](#25-storage-component)
+        - [Common Classes](#26-common-classes)
+    - [Implementation](#3-implementation)
+        - [List Command](#31-list-command--lee-yi-sheng)
+        - [Delete Feature](#32-delete-feature--ong-yu-jie)
+        - [Body Measurement Feature](#33-body-measurement-feature--ong-yu-jie)
+        - [Add Meal](#34-add-meal--ibrahim-shoukry)
+        - [Add Workout](#35-add-workout--jewel-jace-lim)
+        - [Add Milk](#36-add-milk--ryan-siow)
+        - [Add Weight](#37-add-weight--ryan-siow)
+        - [Feature: View Dashboard](#38-feature-view-dashboard)
+        - [Set and View Calorie Control](#39-set-and-view-calorie-goal--ibrahim-shoukry)
+        - [Help Command](#310-help-command)
+    - [Product Scope](#product-scope)
+    - [Value Proposition](#value-proposition)
+    - [User Stories](#user-stories)
+    - [Non-Functional Requirements](#non-functional-requirements)
+    - [Glossary](#glossary)
+    - [Instructions for Manual Testing](#instructions-for-manual-testing)
+    - [Appendix](#appendix-requirements-glossary-and-notes)
 ---
 
 ## Acknowledgements
@@ -26,7 +53,7 @@ Mama follows the **AB3 layered architecture**, extended with additional commands
 
 ### 2.1 Architecture
 
-> **[Insert Architecture Diagram: `images/ArchitectureDiagram.png`]**
+![ArchitectureDiagram.png](images/ArchitectureDiagram.png)
 
 | Layer       | Responsibility                                                |
 |-------------|---------------------------------------------------------------|
@@ -134,6 +161,9 @@ The following steps describe the process for a user command like `list /t meal`:
 5.  A new `ListCommand(predicate, "meal")` is created and returned for execution.
 6.  `ListCommand#execute()` calls `entryList.setFilter(predicate)`, which updates the internal "shown" list to contain only meal entries.
 7.  The command then formats the *newly filtered* "shown" list into a string and returns it in a `CommandResult` to be displayed by the `Ui`.
+
+**NOTE:**
+`Doesn't matter if there's a space between "list" and "/t"`
 
 > **ListCommand Sequence Diagram**
 > ![ListCommand Sequence Diagram](images/ListCommandSequenceDiagram.png)
@@ -286,8 +316,7 @@ The `Ui` captures the raw input.
 ```Added: [MEASURE] waist=70cm, hips=98cm, chest=90cm, thigh=55cm, arm=30cm (28/10/25 02:53)```.
 
 > **AddMeasurement Sequence Diagram**
-> ![AddMeasurement_Sequence](images/AddMeasurement_SequenceDiagram.png)
-
+> ![AddMeasurement_SequenceDiagram.png](images/AddMeasurement_SequenceDiagram.png)
 #### Design Considerations
 
 **Aspect: Required vs optional fields**
@@ -317,27 +346,24 @@ The command validates basic input, appends a `MealEntry` to `EntryList`, and per
 
 **Step 1.** The user enters for example:
 ```add meal breakfast /cal 500 /protein 25 /carbs 10 /fat 14```
-
-> ![Meal_Initial](images/AddMeal_Initial.png)
+![AddMeal_Initial.png](images/AddMeal_Initial.png)
 
 **Step 2.** `Parser` recognises `add meal` and constructs `AddMealCommand(description="breakfast", calories=500, protein=25, carbs=10, fat=14)`.
 > ![Meal_Parsing](images/AddMeal_Parsing.png)
 
 **Step 3.** 
-- **Required:** `mealType`, `calorues` must be present and **> 0** (for calories only).
-- **Optional:** `protein`, `carbs`, `fat` if present must be **> 0**.  
+- **Required:** `mealType`, `calories` must be present and **>= 0** (for calories only).
+- **Optional:** `protein`, `carbs`, `fat` if present, must be **>= 0**.  
   If validation fails → `CommandException`.  
   If valid → create `MealEntry` and append to `EntryList`.
-
-> ![Meal_ValidationAndAppend](images/AddMeal_ValidationAndAppend.png)
-
+![ValidationAppendMeal.png](images/ValidationAppendMeal.png)
+- 
 **Step 4.** `Storage#save(list)` is called to write the updated list to `mama.txt`.
 > ![Meal_Persist](images/AddMeal_Persist.png)
 
 **Step 5.** `Ui` prints the result (e.g., `Got it. I've logged this meal:
   [Meal] breakfast (500 kcal) [protein:25g carbs:10g fat:14g]`).
-
-> ![AddMeal_Sequence](images/AddMeal_SequenceDiagram.png)
+![AddMeal_SequenceDiagram.png](images/AddMeal_SequenceDiagram.png)
 
 #### Design Considerations
 
@@ -452,10 +478,9 @@ a `MilkEntry`.
 
 **Step 4.** `Storage#save(list)` persists the updated list.
 > ![Milk_Persist](images/AddMilk_Persist.png)
-
 **Step 5.** `Ui` shows `Added: [Milk] 150ml`.
-> ![AddMilk_Sequence](images/AddMilk_SequenceDiagram.png)
-
+![AddMilk_SequenceDiagram.png](images/AddMilk_SequenceDiagram.png)
+> 
 #### Design Considerations
 
 **Aspect: Volume input**
@@ -498,7 +523,6 @@ a `WeightEntry`.
 
 **Step 5.** `Ui` shows `Added: [WEIGHT] 60.00kg`.
 ![AddWeight_SequenceDiagram.png](images/AddWeight_SequenceDiagram.png)
-
 #### Design Considerations
 
 **Aspect: Weight input**
@@ -563,8 +587,71 @@ The following steps describe the execution flow of the `dashboard` command:
 
 > **ViewDashboardCommand Sequence Diagram**
 > ![Dashboard Sequence Diagram](images/Dashboard_SequenceDiagram.png)
+
 ---
-### 3.9 Help Command
+
+### 3.9 Set and View Calorie Goal — Ibrahim Shoukry
+
+#### Overview
+
+The `calorie goal` feature allows users to set a daily calorie target and view progress against it. The feature stores the latest daily calorie goal 
+in persistent storage and exposes two main user-facing flows:
+- `calorie goal` — view the currently set goal.
+- `calorie goal <CALORIES>` — set a new daily calorie goal which is persisted to storage.
+
+#### Implementation Details
+
+**Step 1.** The user enters for example: `calorie goal 1800`
+
+**Step 2.** `Parser` recognises the `calorie goal` keyword and delegates handling to `CalorieGoalQueries`.
+
+**Step 3.**
+- If a number follows (`calorie goal 1800`): creates `SetCalorieGoalCommand(1800)`.
+- If no number (`calorie goal`): creates a view command to show current goal and progress.
+
+**Step 4.** Command executes using `Storage`:
+- `SetCalorieGoalCommand#execute` → validates input → calls `Storage#saveGoal(int)`.
+- `ViewCalorieGoalCommand#execute` → calls `Storage#loadGoal()` → sums `MealEntry#getCalories()` → prints progress.
+
+**Step 5.** `Ui` displays a message confirming the operation:
+
+- For set: `Calorie goal set to 1800 kcal.`
+
+- For view: `Your current calorie goal is 1800 kcal. Progress: 1200 kcal logged.`
+
+**Class Diagram**
+
+> ![CalorieGoal_ClassDiagram.png](images/CalorieGoal_ClassDiagram.png)
+
+**Sequence Diagram**
+
+> ![CalorieGoal_SequenceDiagram.png](images/CalorieGoal_SequenceDiagram.png)
+
+#### Design Considerations
+
+**Aspect: Input format**
+
+| Alternative               | Pros                    | Cons                           |
+|---------------------------|-------------------------|--------------------------------|
+| **Global goal (current)** | Simple and clear        | Cannot set per-day goals       |
+| **Per-day goals**         | Flexible and historical | More complex storage and logic |
+
+**Aspect: Validation**
+
+| Rule                                  | Rationale                             |
+|---------------------------------------|---------------------------------------|
+| Calories must be non-negative integer | Avoids invalid/negative goal values   |
+| Input must be non-empty               | Prevents missing and unclear commands |
+
+#### Summary
+
+- **Command:** `calorie goal <calories>`, `calorie goal`
+- **Example:** `calorie goal 1800`
+- **Effect:** Stores or views daily `calorie goal`, persists via `Storage`, and displays via `Ui`.
+
+---
+
+### 3.10 Help Command
 
 #### Overview
 

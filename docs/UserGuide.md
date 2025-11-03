@@ -1,5 +1,23 @@
 # User Guide
-
+## Table of Contents
+- [Introduction](#introduction)
+- [Quick Start](#quick-start)
+- [Features](#features)
+  - [List](#1-viewing-entries--list)
+  - [Delete](#2-deleting-an-entry--delete)
+  - [Meal](#3-logging-a-meal--meal)
+  - [Workout](#4-logging-a-workout--workout)
+  - [Workout Goal](#5-managing-workout-goals--workout-goal)
+  - [Milk](#6-logging-milk-volume--milk)
+  - [Weight](#7-logging-weight--weight)
+  - [Body Measure](#8-logging-body-measurements--measure)
+  - [Calorie Goal](#9-calorie-goal--calorie-goal)
+  - [Dashboard](#10-exiting-the-program--bye)
+  - [Bye](#10-exiting-the-program--bye)
+  - [Help](#11-getting-help--help)
+- [Data File](#data-file)
+- [FAQ](#faq)
+- [Command Summary](#command-summary)
 ---
 
 ## Introduction
@@ -38,7 +56,8 @@ Mama is lightweight, works entirely **offline**, and runs on any system with Jav
 This section explains each command in Mama.  
 Features marked with *Coming soon* are not yet implemented in this version.
 
----
+`All command inputs will be in lowercase`
+
 
 ### 1. Viewing Entries — `list`
 
@@ -91,7 +110,7 @@ Removes an entry by its index as shown in the `list` or `list /t TYPE` command.
 Adds a meal entry with its calorie value.
 
 **Format**
-> meal MEAL_NAME /cal CALORIES /protein PROTEIN /carbs CARBS /fat FAT
+> meal MEAL_NAME /cal CALORIES [/protein PROTEIN] [/carbs CARBS] [/fat FAT]
 
 
 **Examples**
@@ -172,7 +191,6 @@ Records a milk-pumping session in millilitres (ml).
 **Format**
 > milk VOLUME
 
-
 **Examples**
 ```milk 150```
 ```milk 80```
@@ -180,7 +198,10 @@ Records a milk-pumping session in millilitres (ml).
 **Notes**
 
 - `VOLUME` must be a non-negative integer.
+- `VOLUME` must be a whole number
+- `VOLUME` is measured in `ml`
 - Each entry records the date and time automatically.
+- Having no space between milk and <volume> does not affect the functionality of the command
 
 ---
 
@@ -193,18 +214,19 @@ Adds a body-weight entry in kilograms.
 
 
 **Examples**
-```weight 70```
-```weight 63```
+```weight 70.23```
+```weight 63.50```
 
 **Notes**
 
-- The value must be a whole number.
+- The value can have decimal places, maximum up to two decimal places.
+- Weight is measured in `kg`
 
 ---
 
 ### 8. Logging Body Measurements — `measure`
 
-Records body measurements such as waist, hips, chest, thigh and arm.  
+Records body measurements such as waist, hips, or chest.  
 You can include any combination of available fields.
 
 **Format**
@@ -216,10 +238,9 @@ You can include any combination of available fields.
 ```measure waist/78 hips/92 chest/96 thigh/55 arm/30```
 
 **Notes**
-
-- ```WAIST, HIPS```are mandatory.
-- ```CHEST, THIGH, ARM```are optional.
+- `ARM, THIGH, and CHEST` are optional.
 - Each field must be a positive integer (in cm).
+- All measurements are measured in `cm`
 - The order of fields does not matter.
 
 ---
@@ -323,13 +344,15 @@ Displays a list of all available commands and their formats. Use this command wh
 
 **Example Output**
 
-Here are the available commands:
 
-help
+> Here are the available commands:
+>
+> help
+>
+> workout <description> /dur <duration (mins)> /feel <feeling (out of 5)>
+>
+> meal <meal description> /cal <calories> \[/protein \<protein>] \[/carbs \<carbs>] \[/fat \<fat>]
 
-workout <description> /dur <duration (mins)> /feel <feeling (out of 5)>
-
-meal <meal description> /cal <calories> [/p <protein>] [/c <carbs>] [/f <fat>]
 
 ... (and so on for all commands)
 
@@ -341,7 +364,7 @@ Mama automatically creates and updates a text file named `mama.txt` in the same 
 Each entry is stored on a separate line, using the `|` character as a separator.
 
 **Example Content**
-> MEAL|breakfast|500
+> MEAL|breakfast|500|25|5|2|28/10/25 05:20
 >
 > WORKOUT|yoga|45|28/10/25 02:33
 >
@@ -371,16 +394,16 @@ Each entry is stored on a separate line, using the `|` character as a separator.
 
 ## Command Summary
 
-| Command             | Format                                                                | Example                    |
-|---------------------|-----------------------------------------------------------------------|----------------------------|
-| **List**            | `list` or `list /t TYPE`                                              | `list /t meal`             |
-| **Delete**          | `delete INDEX`                                                        | `delete 2`                 |
-| **Add Meal**        | `meal MEAL_NAME /cal CALORIES`                                        | `meal breakfast /cal 500`  |
-| **Add Workout**     | `workout TYPE /dur DURATION`                                          | `workout yoga /dur 30`     |
-| **Workout Goal**    | `workout goal [MINUTES]`                                              | `workout goal 150`         |
-| **Add Milk**        | `milk VOLUME`                                                         | `milk 150`                 |
-| **Add Weight**      | `weight VALUE`                                                        | `weight 70`                |
-| **Add Measurement** | `measure waist/WAIST hips/HIPS [chest/CHEST] [thigh/THIGH] [arm/ARM]` | `measure waist/78 hips/92` |
-| **Calorie Goal**    | `calorie goal [CALORIES]`                                             | `calorie goal 1800`        |
-| **Exit**            | `bye`                                                                 | `bye`                      |
+| Command             | Format                                                                      | Example                        |
+|---------------------|-----------------------------------------------------------------------------|--------------------------------|
+| **List**            | `list` or `list /t TYPE`                                                    | `list /t meal`                 |
+| **Delete**          | `delete INDEX`                                                              | `delete 2`                     |
+| **Add Meal**        | `meal MEAL_NAME /cal CALORIES [/protein PROTEIN] [/carbs CARBS] [/fat FAT]` | `meal breakfast /cal 500`      |
+| **Add Workout**     | `workout TYPE /dur DURATION /feel FEEL`                                     | `workout yoga /dur 30 /feel 1` |
+| **Workout Goal**    | `workout goal [MINUTES]`                                                    | `workout goal 150`             |
+| **Add Milk**        | `milk VOLUME`                                                               | `milk 150`                     |
+| **Add Weight**      | `weight VALUE`                                                              | `weight 70`                    |
+| **Add Measurement** | `measure waist/WAIST hips/HIPS [chest/CHEST] [thigh/THIGH] [arm/ARM]`       | `measure waist/78 hips/92`     |
+| **Calorie Goal**    | `calorie goal [CALORIES]` or `calorie goal`                                 | `calorie goal 1800`            |
+| **Exit**            | `bye`                                                                       | `bye`                          |
 
