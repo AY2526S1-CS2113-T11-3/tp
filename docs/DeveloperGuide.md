@@ -26,7 +26,7 @@ Mama follows the **AB3 layered architecture**, extended with additional commands
 
 ### 2.1 Architecture
 
-> **[Insert Architecture Diagram: `images/ArchitectureDiagram.png`]**
+![ArchitectureDiagram.png](images/ArchitectureDiagram.png)
 
 | Layer       | Responsibility                                                |
 |-------------|---------------------------------------------------------------|
