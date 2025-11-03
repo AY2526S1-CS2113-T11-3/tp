@@ -91,7 +91,7 @@ Removes an entry by its index as shown in the `list` or `list /t TYPE` command.
 Adds a meal entry with its calorie value.
 
 **Format**
-> meal MEAL_NAME /cal CALORIES /protein PROTEIN /carbs CARBS /fat FAT
+> meal MEAL_NAME /cal CALORIES [/protein PROTEIN] [/carbs CARBS] [/fat FAT]
 
 
 **Examples**
@@ -172,7 +172,6 @@ Records a milk-pumping session in millilitres (ml).
 **Format**
 > milk VOLUME
 
-
 **Examples**
 ```milk 150```
 ```milk 80```
@@ -180,7 +179,8 @@ Records a milk-pumping session in millilitres (ml).
 **Notes**
 
 - `VOLUME` must be a non-negative integer.
-- 'VOLUME' must be a whole number
+- `VOLUME` must be a whole number
+- `VOLUME` is measured in `ml`
 - Each entry records the date and time automatically.
 
 ---
@@ -200,6 +200,7 @@ Adds a body-weight entry in kilograms.
 **Notes**
 
 - The value can have decimal places, maximum up to two decimal places.
+- Weight is measured in `kg`
 
 ---
 
@@ -217,8 +218,9 @@ You can include any combination of available fields.
 ```measure waist/78 hips/92 chest/96 thigh/55 arm/30```
 
 **Notes**
-
+- `ARM, THIGH, and CHEST` are optional.
 - Each field must be a positive integer (in cm).
+- All measurements are measured in `cm`
 - The order of fields does not matter.
 
 ---
