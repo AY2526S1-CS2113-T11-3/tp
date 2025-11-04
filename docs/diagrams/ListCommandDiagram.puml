@@ -63,14 +63,18 @@ package "java.util.logging" {
   class Logger
 }
 
-' Relationships
+' --- Relationships ---
 ListCommand ..|> Command
-ListCommand ..> Predicate : holds filter
-ListCommand ..> EntryList : reads entries
-ListCommand ..> Entry : formats toListLine()
-ListCommand ..> CommandResult : returns
-ListCommand ..> CommandException : throws (execute signature)
-ListCommand ..> Logger : logs
 
-EntryList "1" o--> "many" Entry
+' Association: ListCommand has a Predicate field
+ListCommand "1" --> "1" Predicate
+
+' Dependencies: Used as parameters, return types, or locals
+ListCommand ..> EntryList
+ListCommand ..> Entry
+ListCommand ..> CommandResult
+ListCommand ..> CommandException
+ListCommand ..> Logger
+
+EntryList "1" o--> "*" Entry
 @enduml
