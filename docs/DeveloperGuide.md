@@ -697,7 +697,7 @@ Ui prints the CommandResult message for both set & view paths.
 #### Summary
 **Command:**
 - `workout goal <MINUTES>` → sets weekly target and persists via Storage#save(EntryList).
-- `workout goal` (or alias) → views current week’s goal and progress.
+- `workout goal` → views current week’s goal and progress.
 
 ### 3.11 Help Command
 
