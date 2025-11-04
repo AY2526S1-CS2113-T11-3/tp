@@ -249,7 +249,7 @@ Here are your entries:
 ```
 
 > **DeleteCommand Sequence Diagram**  
-![DeleteCommandSequenceDiagram](images/Delete_SequenceDiagram.png)
+> ![DeleteCommandSequenceDiagram](images/Delete_SequenceDiagram.png)
 
 #### Design Considerations
 
@@ -347,7 +347,7 @@ The command validates basic input, appends a `MealEntry` to `EntryList`, and per
 
 **Step 1.** The user enters for example:
 ```add meal breakfast /cal 500 /protein 25 /carbs 10 /fat 14```
-![AddMeal_Initial.png](images/AddMeal_Initial.png)
+> ![AddMeal_Initial.png](images/AddMeal_Initial.png)
 
 **Step 2.** `Parser` recognises `add meal` and constructs `AddMealCommand(description="breakfast", calories=500, protein=25, carbs=10, fat=14)`.
 > ![Meal_Parsing](images/AddMeal_Parsing.png)
@@ -357,14 +357,14 @@ The command validates basic input, appends a `MealEntry` to `EntryList`, and per
 - **Optional:** `protein`, `carbs`, `fat` if present, must be **>= 0**.  
   If validation fails → `CommandException`.  
   If valid → create `MealEntry` and append to `EntryList`.
-![ValidationAppendMeal.png](images/ValidationAppendMeal.png)
+> ![ValidationAppendMeal.png](images/ValidationAppendMeal.png)
 - 
 **Step 4.** `Storage#save(list)` is called to write the updated list to `mama.txt`.
 > ![Meal_Persist](images/AddMeal_Persist.png)
 
 **Step 5.** `Ui` prints the result (e.g., `Got it. I've logged this meal:
   [Meal] breakfast (500 kcal) [protein:25g carbs:10g fat:14g]`).
-![AddMeal_SequenceDiagram.png](images/AddMeal_SequenceDiagram.png)
+> ![AddMeal_SequenceDiagram.png](images/AddMeal_SequenceDiagram.png)
 
 #### Design Considerations
 
@@ -468,20 +468,20 @@ It validates the volume, appends a `MilkEntry`, and persists via `Storage#save(l
 #### Implementation Details
 
 **Step 1.** User enters `milk 30`. `Ui` captures input.
-![AddMilk_Initial.png](images/AddMilk_Initial.png)
+> ![AddMilk_Initial.png](images/AddMilk_Initial.png)
 
 **Step 2.** `Parser` constructs `AddMilkCommand(volume=30)`.
 > ![Milk_Parsing](images/AddMilk_Parsing.png)
 
 **Step 3.** `AddMilkCommand#execute(...)` checks `volume > 0`. If invalid, throws `CommandException`. If valid, appends
 a `MilkEntry`.
-![ValidationAppendMilk-Validation.png](images/ValidationAppendMilk-Validation.png)
+> ![ValidationAppendMilk-Validation.png](images/ValidationAppendMilk-Validation.png)
 
 **Step 4.** `Storage#save(list)` persists the updated list.
 > ![Milk_Persist](images/AddMilk_Persist.png)
 **Step 5.** `Ui` shows `Added: [Milk] 150ml`.
-![AddMilk_SequenceDiagram.png](images/AddMilk_SequenceDiagram.png)
-> 
+> ![AddMilk_SequenceDiagram.png](images/AddMilk_SequenceDiagram.png)
+
 #### Design Considerations
 
 **Aspect: Volume input**
@@ -510,20 +510,20 @@ It validates the weight, appends a `WeightEntry`, and persists via `Storage#save
 #### Implementation Details
 
 **Step 1.** User enters `weight 60`. `Ui` captures input.
-![AddWeight_Initial.png](images/AddWeight_Initial.png)
+> ![AddWeight_Initial.png](images/AddWeight_Initial.png)
 
 **Step 2.** `Parser` constructs `AddWeightCommand(weight=60)`.
 > ![AddWeight_Parsing.png](images/AddWeight_Parsing.png)
 
 **Step 3.** `AddWeightCommand#execute(...)` checks `weight > 0`. If invalid, throws `CommandException`. If valid, appends
 a `WeightEntry`.
-![ValidationAppendWeight.png](images/ValidationAppendWeight.png)
+> ![ValidationAppendWeight.png](images/ValidationAppendWeight.png)
 
 **Step 4.** `Storage#save(list)` persists the updated list.
 > ![AddWeight_Persist.png](images/AddWeight_Persist.png)
 
 **Step 5.** `Ui` shows `Added: [WEIGHT] 60.00kg`.
-![AddWeight_SequenceDiagram.png](images/AddWeight_SequenceDiagram.png)
+> ![AddWeight_SequenceDiagram.png](images/AddWeight_SequenceDiagram.png)
 #### Design Considerations
 
 **Aspect: Weight input**
@@ -733,9 +733,10 @@ This design is highly maintainable. To add a new command to the help message, a 
 
 #### Summary
 
-* **Command:** `help`
-* **Effect:** Displays a list of all commands and their formats.
-* **Key Design:** Leverages the `CommandType` enum as a single source of truth for maintainability.
+- **Command:** `help`
+- **Effect:** Displays a list of all commands and their formats.
+- **Key Design:** Leverages the `CommandType` enum as a single source of truth for maintainability.
+
 ---
 ## Product Scope
 

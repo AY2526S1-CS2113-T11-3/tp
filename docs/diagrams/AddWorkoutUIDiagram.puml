@@ -5,7 +5,7 @@ skinparam shadowing false
 title Step 1 — UI captures input
 
 actor User
-participant "UI" as UI #CFE2FF
+participant ":UI" as UI #CFE2FF
 
 User -> UI : "workout yoga /dur 30 /feel 4"
 note right of UI

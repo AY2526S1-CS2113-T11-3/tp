@@ -2,13 +2,13 @@
 title ViewWorkoutGoalCommand — execute
 
 actor User
-participant "UI" as UI #CFE2FF
-participant Parser #D1E7DD
-participant "ViewWorkoutGoalCommand" as ViewCmd #D1E7DD
-participant EntryList #FFF3CD
-participant DateTimeUtil #FFF3CD
-participant WorkoutGoalQueries #FFF3CD
-participant "WorkoutEntry" as W #FFF3CD
+participant ":UI" as UI #CFE2FF
+participant ":Parser" as Parser #D1E7DD
+participant ":ViewWorkoutGoalCommand" as ViewCmd #D1E7DD
+participant ":EntryList" as EntryList #FFF3CD
+participant ":DateTimeUtil" as DateTimeUtil #FFF3CD
+participant ":WorkoutGoalQueries" as WorkoutGoalQueries #FFF3CD
+participant ":WorkoutEntry" as W #FFF3CD
 
 
 User -> UI: "workout goal" (view weekly goal)

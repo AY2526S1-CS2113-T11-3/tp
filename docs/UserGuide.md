@@ -407,4 +407,3 @@ Each entry is stored on a separate line, using the `|` character as a separator.
 | **Add Measurement** | `measure waist/WAIST hips/HIPS [chest/CHEST] [thigh/THIGH] [arm/ARM]`       | `measure waist/78 hips/92`     |
 | **Calorie Goal**    | `calorie goal [CALORIES]` or `calorie goal`                                 | `calorie goal 1800`            |
 | **Exit**            | `bye`                                                                       | `bye`                          |
-
