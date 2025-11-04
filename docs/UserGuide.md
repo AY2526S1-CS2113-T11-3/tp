@@ -16,8 +16,8 @@
   - [Bye](#10-exiting-the-program--bye)
   - [Help](#11-getting-help--help)
 - [Data File](#data-file)
-- [Command Summary](#command-summary)
 - [FAQ](#faq)
+- [Command Summary](#command-summary)
 
 ---
 
@@ -156,9 +156,10 @@ Compact forms are also accepted: ```workout TYPE/durDURATION/feelRATING```
 | **5**       | I feel amazing and/or I loved the workout activity 😍💕                      |
 
 - Exactly one `/dur` and one `/feel` must be present.
+- Each workout is timestamped automatically and saved to storage.
 - Do not add extra words after the numbers (e.g., avoid `mins`, `great`):
   use `... /dur 30 /feel 4`, not `... /dur 30 mins /feel 4 great`.
-- Each workout is timestamped automatically and saved to storage.
+
 ---
 
 ### 5. Managing Workout Goals — `workout goal`
