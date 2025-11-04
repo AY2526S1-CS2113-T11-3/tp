@@ -1,26 +1,45 @@
-@startuml
-title **Validation & Removal**
+@startuml ValidationAppendDelete
+title Validation & Append
 
-skinparam shadowing false
-skinparam defaultFontName Arial
-skinparam roundcorner 15
-skinparam packageStyle rectangle
-
-!define FRAME #F2F4F7
-!define CARD  #FFF8E1
-
-left to right direction
-
-rectangle "EntryList (before)" <<frame>> FRAME {
-  rectangle "1. [Meal] breakfast (500 kcal)" as b1 CARD
-  rectangle "2. [Workout] yoga (30 mins) (27/10/25 22.24)"          as b2 CARD
-  rectangle "3. [Milk] 150ml (27/10/25 22:27)"          as b3 CARD
+skinparam component {
+  BorderColor black
+  BackgroundColor white
+  FontSize 12
 }
 
-rectangle "EntryList (after)" <<frame>> FRAME {
-  rectangle "1. [Meal] breakfast (500 kcal)" as a1 CARD
-  rectangle "2. [Milk] 150ml (27/10/25 22:27)"          as a3 CARD
+' Define the object instances
+object "EntryList (before)" as EL_B
+object "MealEntry" as MA {
+  [MILK] 150ml (dd/MM/yy HH:mm)
 }
 
-b2 -[#777]-> a1 : delete index 2
+object "WorkoutEntry" as MB {
+    [Workout] yoga (30 mins, feel 3/5) (dd/MM/yy HH:mm)
+}
+object "MilkEntry" as MC {
+  [MILK] 150ml (dd/MM/yy HH:mm)
+}
+
+object "EntryList (after)" as EL_A {
+
+}
+object "MealEntry" as MD {
+    [Meal] breakfast (500 kcal) (dd/MM/yy HH:mm)
+}
+
+object "MilkEntry" as ME {
+    [MILK] 150ml (dd/MM/yy HH:mm)
+}
+' 1. Show the action (Append)
+EL_B -right-> EL_A : delete WorkoutEntry
+
+' 2. Show the containment/link relationship
+'    The EntryList (after) contains the new MilkEntry
+EL_A o-- ME : contains
+EL_A o-- MD : contains
+
+EL_B o-- MB : contains
+EL_B o-- MA : contains
+EL_B o-- MC : contains
+
 @enduml

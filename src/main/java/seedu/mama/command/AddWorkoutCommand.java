@@ -68,7 +68,6 @@ public final class AddWorkoutCommand implements Command {
         logger.fine("Parsing AddWorkoutCommand from input: " + input);
         String after = input.substring("workout".length()).trim();
         if (after.isEmpty()) {
-            logger.warning("Parse error: workout type missing");
             throw new CommandException("Workout type cannot be empty.\nUsage: workout TYPE /dur DURATION /feel FEEL");
         }
 

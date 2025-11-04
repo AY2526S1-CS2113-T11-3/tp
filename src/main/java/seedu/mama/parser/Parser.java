@@ -48,71 +48,62 @@ public class Parser {
      */
     public static Command parse(String input) throws CommandException {
         String trimmed = input.trim();
-        if (trimmed.contains("|")) {
+        String lower = trimmed.toLowerCase();
+        if (lower.contains("|")) {
             throw new CommandException("Invalid command arguments! No | allowed!");
         }
 
         // Handles the "bye" command (terminates the program)
-        if (trimmed.equals("bye")) {
+        if (lower.equals("bye")) {
             return (l, s) -> new CommandResult("Bye. Hope to see you again soon!");
         }
 
-        if (trimmed.equals("help")) {
+        if (lower.equals("help")) {
             return new HelpCommand();
         }
 
-        if (trimmed.equals("dashboard")) {
+        if (lower.equals("dashboard")) {
             return new ViewDashboardCommand();
         }
 
         // Handles "delete" commands
-        if (trimmed.startsWith("delete")) {
-            String[] parts = trimmed.split("\\s+");
-            if (parts.length == 2 && parts[1].equals("?")) {
-                return new DeleteCommand(-1);
-            }
-            if (parts.length < 2) {
-                return (l, s) -> new CommandResult("Usage: delete INDEX");
-            }
-            try {
-                return new DeleteCommand(Integer.parseInt(parts[1]));
-            } catch (NumberFormatException e) {
-                return (l, s) -> new CommandResult("INDEX must be a number.");
-            }
+        if (lower.startsWith("delete")) {
+            return DeleteCommand.fromInput(lower);
         }
+
         // Handles "list" command
-        if (trimmed.startsWith("list")) {
-            String arguments = trimmed.substring("list".length());
+        if (lower.startsWith("list")) {
+            String arguments = lower.substring("list".length());
             return ListCommandParser.parseListCommand(arguments);
         }
 
-        if (trimmed.startsWith("milk")) {
-            return AddMilkCommand.fromInput(trimmed);
+        if (lower.startsWith("milk")) {
+            return AddMilkCommand.fromInput(lower);
         }
 
         // Handles "workout goal" command, needs to be checked before generic "workout " command
-        if (trimmed.toLowerCase().startsWith("workout goal")) {
-            String[] parts = trimmed.split("\\s+");
+        if (lower.toLowerCase().startsWith("workout goal")) {
+            String[] parts = lower.split("\\s+");
             if (parts.length == 2) {
                 // "workout goal" with no minutes input → view current workout goal
                 return new ViewWorkoutGoalCommand();
             }
             // otherwise, delegate to the setter parser: "workout goal <minutes>"
             try {
-                return SetWorkoutGoalCommand.fromInput(trimmed);
+                return SetWorkoutGoalCommand.fromInput(lower);
             } catch (CommandException e) {
                 return (l, s) -> new CommandResult(e.getMessage());
             }
         }
 
         // Handles "workout " command
-        if (trimmed.toLowerCase().startsWith("workout")) {
-            return AddWorkoutCommand.fromInput(trimmed);
+        if (lower.startsWith("workout ")) {
+            return AddWorkoutCommand.fromInput(lower);
         }
 
         // Handles "weight" command
-        if (trimmed.startsWith("weight")) {
-            String[] parts = trimmed.split("\\s+");
+        if (lower.startsWith("weight")) {
+            String[] parts = lower.split("\\s+");
 
             if (parts.length < 2) {
                 return (l, s) -> new CommandResult("Weight must be a number. " +
@@ -127,13 +118,13 @@ public class Parser {
         }
 
         // Handles "meal" command
-        if (trimmed.startsWith("meal")) {
-            return AddMealCommand.fromInput(trimmed);
+        if (lower.startsWith("meal")) {
+            return AddMealCommand.fromInput(lower);
         }
 
         // Handles "measure" command
-        if (trimmed.startsWith("measure")) {
-            String[] parts = trimmed.split("\\s+");
+        if (lower.startsWith("measure")) {
+            String[] parts = lower.split("\\s+");
             if (parts.length == 2 && "?".equals(parts[1])) {
                 return (l, s) -> new CommandResult(
                         "Usage: measure waist/<cm> hips/<cm> [chest/<cm>] [thigh/<cm>] [arm/<cm>]");
@@ -174,13 +165,13 @@ public class Parser {
         }
 
         // Handles "calorie goal" command
-        if (trimmed.equals("calorie goal")) {
+        if (lower.equals("calorie goal")) {
             // Just "calorie goal" -> show current goal
             return CalorieGoalQueries.viewCalorieGoal();
         }
-        if (trimmed.startsWith("calorie goal ")) {
+        if (lower.startsWith("calorie goal ")) {
             // "calorie goal <calorie goal>" -> set new goal
-            return CalorieGoalQueries.setCalorieGoal(trimmed);
+            return CalorieGoalQueries.setCalorieGoal(lower);
         }
 
         return (l, s) -> new CommandResult("Unknown command.");

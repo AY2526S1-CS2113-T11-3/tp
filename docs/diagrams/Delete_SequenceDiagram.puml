@@ -4,6 +4,7 @@ title DeleteCommand — sequence for "delete 2"
 skinparam shadowing false
 skinparam defaultFontName Arial
 skinparam sequenceMessageAlign center
+
 ' palette
 !define UI     #E3F2FD
 !define LOGIC  #E8F5E9
@@ -11,26 +12,49 @@ skinparam sequenceMessageAlign center
 !define STOR   #FCE4EC
 
 actor User
-participant "Ui"               as Ui    UI
-participant "Parser"           as Par   LOGIC
-participant "DeleteCommand"    as Del   LOGIC
-participant "EntryList"        as List  MODEL
-participant "Storage"          as Sto   STOR
+participant ":Ui"            as Ui   UI
+participant ":Parser"        as Par  LOGIC
+participant ":DeleteCommand" as Del  LOGIC
+participant ":EntryList"     as List MODEL
+participant ":Storage"       as Sto  STOR
 
 User -> Ui  : enter "delete 2"
+activate Ui
 Ui   -> Par : parse("delete 2")
-Par  -> Del : new DeleteCommand(2)
-Par  --> Ui : DeleteCommand
+activate Par
+
+' --- constructor must create the instance (lifeline starts here) ---
+create Del
+Par  -> Del ++ : new DeleteCommand(2)
+Par  --> Ui    : Command (DeleteCommand)
+deactivate Par
 
 Ui   -> Del : execute(list, storage)
+' Del already activated by «create» (the ++); keep it active
 
-opt invalid index
-  Del --> Ui : CommandException("Invalid index\\n" + previewList)
+' validate against SHOWN view
+Del  -> List : shownSize()
+activate List
+List --> Del  : N
+deactivate List
+
+opt index out of bounds
+  Del --> Ui : throw CommandException("Index X is out of bounds (shown list).\nUsage: delete INDEX\n…\nHere are your entries: …")
+  deactivate Del
+  deactivate Ui
 else valid index
-  Del  -> List: deleteByIndex(1)  ' 1-based -> 0-based
-  List --> Del : removed Entry
-  Del  -> Sto : save(list)
-  Sto  --> Del : ok
-  Del  --> Ui  : CommandResult("Deleted: ...")
+  Del  -> List : deleteByShownIndex(1)  ' 1-based -> 0-based
+  activate List
+  List --> Del  : removed Entry
+  deactivate List
+
+  Del  -> Sto  : save(list)
+  activate Sto
+  Sto  --> Del  : ok
+  deactivate Sto
+
+  Del  --> Ui   : CommandResult("Deleted: …")
+  deactivate Del
+  deactivate Ui
 end
 @enduml
