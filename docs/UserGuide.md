@@ -343,6 +343,8 @@ Displays a list of all available commands and their formats. Use this command wh
 
 **Format**
 > help
+>
+**Example** ```help```
 
 **Example Output**
 
@@ -408,3 +410,5 @@ Each entry is stored on a separate line, using the `|` character as a separator.
 | **Add Measurement** | `measure waist/WAIST hips/HIPS [chest/CHEST] [thigh/THIGH] [arm/ARM]`       | `measure waist/78 hips/92`     |
 | **Calorie Goal**    | `calorie goal [CALORIES]` or `calorie goal`                                 | `calorie goal 1800`            |
 | **Exit**            | `bye`                                                                       | `bye`                          |
+| **Help**            | `help`                                                                      | `help`                         |
+| **Dashboard**       | `dashboard`                                                                 | `dashboard`                    |
