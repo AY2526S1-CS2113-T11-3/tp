@@ -86,24 +86,24 @@ package "java.time.format" {
 }
 
 ' --- Relationships ---
-ViewDashboardCommand ..> DashboardSummary : "1. creates & uses"
-ViewDashboardCommand ..> DashboardFormatter : "2. creates & uses"
-ViewDashboardCommand ..> CommandResult : "3. returns"
-ViewDashboardCommand ..> Logger : "logs"
+ViewDashboardCommand ..|> Command
+ViewDashboardCommand ..> DashboardSummary
+ViewDashboardCommand ..> DashboardFormatter
+ViewDashboardCommand ..> CommandResult
+ViewDashboardCommand ..> Logger
 
-DashboardSummary ..> Storage : "uses"
-DashboardSummary ..> EntryList : "uses"
-DashboardSummary ..> WorkoutGoalQueries : "uses"
-DashboardSummary ..> Logger : "logs"
-DashboardSummary ..> LocalDate : "uses"
-DashboardSummary ..> DateTimeFormatter : "uses"
+DashboardSummary ..> Storage
+DashboardSummary ..> EntryList
+DashboardSummary ..> WorkoutGoalQueries
+DashboardSummary ..> Logger
+DashboardSummary ..> LocalDate
+DashboardSummary ..> DateTimeFormatter
 
-DashboardFormatter ..> DashboardSummary : "uses"
-DashboardFormatter ..> WorkoutGoalEntry : "uses"
-DashboardFormatter ..> Logger : "logs"
+DashboardFormatter ..> DashboardSummary
+DashboardFormatter ..> WorkoutGoalEntry
+DashboardFormatter ..> Logger
 
 WorkoutGoalQueries ..> Entry
 WorkoutGoalQueries ..> WorkoutGoalEntry
 WorkoutGoalQueries ..> LocalDateTime
 @enduml
-

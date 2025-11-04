@@ -17,7 +17,7 @@
         - [Add Workout](#35-add-workout--jewel-jace-lim)
         - [Add Milk](#36-add-milk--ryan-siow)
         - [Add Weight](#37-add-weight--ryan-siow)
-        - [Feature: View Dashboard](#38-feature-view-dashboard)
+        - [View Dashboard](#38-view-dashboard)
         - [Set and View Calorie Control](#39-set-and-view-calorie-goal--ibrahim-shoukry)
         - [Set and View Weekly Workout Goal](#310-set-and-view-weekly-workout-goal---jewel-jace-lim)
         - [Help Command](#311-help-command)
@@ -547,7 +547,7 @@ a `WeightEntry`.
 - **Example:** `weight 60`
 - **Effect:** Appends a `WeightEntry` and saves immediately.
 
-### 3.8 Feature: View Dashboard
+### 3.8 View Dashboard
 
 #### Overview
 
