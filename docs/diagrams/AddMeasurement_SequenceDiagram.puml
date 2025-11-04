@@ -1,6 +1,5 @@
 @startuml
-' ===== Sequence: measure waist/70 hips/98 chest/90 thigh/55 arm/30 =====
-title AddMeasurementCommand - Sequence for "measure ..."
+title AddMeasurementCommand — Sequence for "measure ..."
 
 skinparam shadowing false
 skinparam defaultFontName Arial
@@ -13,32 +12,33 @@ skinparam sequence {
 }
 
 actor User
-participant ":Ui"           as UI  #E3F2FD
-participant ":Parser"       as PR  #E8F5E9
+participant ":Ui" as UI  #E3F2FD
 participant ":AddMeasurementCommand" as AMC #C8E6C9
-participant ":EntryList"    as LIST #FFFDE7
-participant ":Storage"      as ST   #FCE4EC
+participant ":EntryList" as LIST #FFFDE7
+participant ":Storage" as ST   #FCE4EC
 
-User -> UI : enter "measure waist/70 hips/98 \nchest/90 thigh/55 arm/30"
+User -> UI : confirm command
 activate UI
-UI -> PR  : parse(raw)
-activate PR
-PR --> UI  : new AddMeasurementCommand(70,98,90,55,30)
-deactivate PR
 UI -> AMC : execute(list, storage)
 activate AMC
 
-alt invalid input (missing/≤0)
-  AMC --> UI : throw CommandException\n("Waist and hips must be positive ...")
-else valid input
-  AMC -> LIST : add(new BodyMeasurementEntry)
-  activate LIST
-  AMC -> ST   : save(list)
-  activate ST
-  ST --> AMC  : ok
-  deactivate ST
-  AMC --> UI  : CommandResult("Added: [MEASURE] waist=70cm, ...")
+opt invalid input (missing/≤0)
+  AMC --> UI : throw CommandException("Waist and hips must be positive ...")
   deactivate AMC
-end
+  deactivate UI
+else valid input
+  AMC -> LIST : add(new BodyMeasurementEntry(..., timestamp=now))
+  activate LIST
+  LIST --> AMC : added entry
+  deactivate LIST
 
+  AMC -> ST : save(list)
+  activate ST
+  ST --> AMC : ok
+  deactivate ST
+
+  AMC --> UI : CommandResult("Added: [MEASURE] waist=70cm, ...")
+  deactivate AMC
+  deactivate UI
+end
 @enduml

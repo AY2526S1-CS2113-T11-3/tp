@@ -180,7 +180,7 @@ Sets or views your **weekly workout goal**.
 
 - The goal represents total minutes of workouts per week.
 - A week runs from **Monday 00:00** to **Sunday 23:59**
-- The latest goal you set within the week applies for that week. Setting a new goal later in the same week replaces the earlier one for that week only.
+- The latest goal you set within the week applies for that week and goals do not stack. Setting a new goal later in the same week replaces the earlier one for that week only.
 - Goals do not backfill past weeks and do not carry forward automatically, set a new goal next week if you want one.
 - You can view past workout goals using ```list``` or ```list /t workout_goal```.
 
@@ -408,4 +408,3 @@ Each entry is stored on a separate line, using the `|` character as a separator.
 | **Add Measurement** | `measure waist/WAIST hips/HIPS [chest/CHEST] [thigh/THIGH] [arm/ARM]`       | `measure waist/78 hips/92`     |
 | **Calorie Goal**    | `calorie goal [CALORIES]` or `calorie goal`                                 | `calorie goal 1800`            |
 | **Exit**            | `bye`                                                                       | `bye`                          |
-

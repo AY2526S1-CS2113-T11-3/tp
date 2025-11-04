@@ -237,7 +237,10 @@ A success message such as `Deleted: [Workout] yoga (30 mins) (27/10/25 22:24)` i
 If the index is invalid, an error message and the current entry list are shown instead.
 
 ```
-Invalid index: 9
+Error: Index 9 is out of bounds (shown list). Valid range: 1..4.
+Usage: delete INDEX
+Deletes the entry at INDEX from the currently shown list.
+• INDEX must be a positive whole number (1, 2, 3, ...).
 Here are your entries:
 1. [Meal] breakfast (500 kcal)
 2. [Workout] yoga (30 mins) (27/10/25 22:24)
@@ -245,7 +248,7 @@ Here are your entries:
 ```
 
 > **DeleteCommand Sequence Diagram**  
-![DeleteCommandSequenceDiagram](images/Delete_SequenceDiagram.png)
+> ![DeleteCommandSequenceDiagram](images/Delete_SequenceDiagram.png)
 
 #### Design Considerations
 
@@ -289,7 +292,7 @@ using `Storage#save(list)`.
 **Step 1 — User issues a command**  
 The user enters, for example:
 ```measure waist/70 hips/98 chest/90 thigh/55 arm/30```
-![AddMeasurement_Initial.png](images/AddMeasurement_Initial.png)
+> ![AddMeasurement_Initial.png](images/AddMeasurement_Initial.png)
 
 The `Ui` captures the raw input.
 
@@ -304,7 +307,7 @@ The `Ui` captures the raw input.
 - **Optional:** `chest`, `thigh`, `arm` if present must be **> 0**.  
   If validation fails → `CommandException`.  
   If valid → create `BodyMeasurementEntry` and append to `EntryList`.
-![ValidationAppendMeasurement.png](images/ValidationAppendMeasurement.png)
+> ![ValidationAppendMeasurement.png](images/ValidationAppendMeasurement.png)
 
 **Step 4.** Persist: `Storage#save(list)`.
 > ![Measure_Persist](images/AddMeasurement_Persist.png)
@@ -343,7 +346,7 @@ The command validates basic input, appends a `MealEntry` to `EntryList`, and per
 
 **Step 1.** The user enters for example:
 ```add meal breakfast /cal 500 /protein 25 /carbs 10 /fat 14```
-![AddMeal_Initial.png](images/AddMeal_Initial.png)
+> ![AddMeal_Initial.png](images/AddMeal_Initial.png)
 
 **Step 2.** `Parser` recognises `add meal` and constructs `AddMealCommand(description="breakfast", calories=500, protein=25, carbs=10, fat=14)`.
 > ![Meal_Parsing](images/AddMeal_Parsing.png)
@@ -353,14 +356,14 @@ The command validates basic input, appends a `MealEntry` to `EntryList`, and per
 - **Optional:** `protein`, `carbs`, `fat` if present, must be **>= 0**.  
   If validation fails → `CommandException`.  
   If valid → create `MealEntry` and append to `EntryList`.
-![ValidationAppendMeal.png](images/ValidationAppendMeal.png)
+> ![ValidationAppendMeal.png](images/ValidationAppendMeal.png)
 - 
 **Step 4.** `Storage#save(list)` is called to write the updated list to `mama.txt`.
 > ![Meal_Persist](images/AddMeal_Persist.png)
 
 **Step 5.** `Ui` prints the result (e.g., `Got it. I've logged this meal:
   [Meal] breakfast (500 kcal) [protein:25g carbs:10g fat:14g]`).
-![AddMeal_SequenceDiagram.png](images/AddMeal_SequenceDiagram.png)
+> ![AddMeal_SequenceDiagram.png](images/AddMeal_SequenceDiagram.png)
 
 #### Design Considerations
 
@@ -464,20 +467,20 @@ It validates the volume, appends a `MilkEntry`, and persists via `Storage#save(l
 #### Implementation Details
 
 **Step 1.** User enters `milk 30`. `Ui` captures input.
-![AddMilk_Initial.png](images/AddMilk_Initial.png)
+> ![AddMilk_Initial.png](images/AddMilk_Initial.png)
 
 **Step 2.** `Parser` constructs `AddMilkCommand(volume=30)`.
 > ![Milk_Parsing](images/AddMilk_Parsing.png)
 
 **Step 3.** `AddMilkCommand#execute(...)` checks `volume > 0`. If invalid, throws `CommandException`. If valid, appends
 a `MilkEntry`.
-![ValidationAppendMilk-Validation.png](images/ValidationAppendMilk-Validation.png)
+> ![ValidationAppendMilk-Validation.png](images/ValidationAppendMilk-Validation.png)
 
 **Step 4.** `Storage#save(list)` persists the updated list.
 > ![Milk_Persist](images/AddMilk_Persist.png)
 **Step 5.** `Ui` shows `Added: [Milk] 150ml`.
-![AddMilk_SequenceDiagram.png](images/AddMilk_SequenceDiagram.png)
-> 
+> ![AddMilk_SequenceDiagram.png](images/AddMilk_SequenceDiagram.png)
+
 #### Design Considerations
 
 **Aspect: Volume input**
@@ -506,20 +509,20 @@ It validates the weight, appends a `WeightEntry`, and persists via `Storage#save
 #### Implementation Details
 
 **Step 1.** User enters `weight 60`. `Ui` captures input.
-![AddWeight_Initial.png](images/AddWeight_Initial.png)
+> ![AddWeight_Initial.png](images/AddWeight_Initial.png)
 
 **Step 2.** `Parser` constructs `AddWeightCommand(weight=60)`.
 > ![AddWeight_Parsing.png](images/AddWeight_Parsing.png)
 
 **Step 3.** `AddWeightCommand#execute(...)` checks `weight > 0`. If invalid, throws `CommandException`. If valid, appends
 a `WeightEntry`.
-![ValidationAppendWeight.png](images/ValidationAppendWeight.png)
+> ![ValidationAppendWeight.png](images/ValidationAppendWeight.png)
 
 **Step 4.** `Storage#save(list)` persists the updated list.
 > ![AddWeight_Persist.png](images/AddWeight_Persist.png)
 
 **Step 5.** `Ui` shows `Added: [WEIGHT] 60.00kg`.
-![AddWeight_SequenceDiagram.png](images/AddWeight_SequenceDiagram.png)
+> ![AddWeight_SequenceDiagram.png](images/AddWeight_SequenceDiagram.png)
 #### Design Considerations
 
 **Aspect: Weight input**
@@ -543,7 +546,7 @@ a `WeightEntry`.
 - **Example:** `weight 60`
 - **Effect:** Appends a `WeightEntry` and saves immediately.
 
-### 3.8 Feature: View Dashboard
+### 3.8 View Dashboard
 
 #### Overview
 
@@ -647,7 +650,60 @@ in persistent storage and exposes two main user-facing flows:
 
 ---
 
-### 3.10 Help Command
+### 3.10 Set and View Weekly Workout Goal - Jewel Jace Lim
+#### Overview
+The weekly `workout goal` feature lets users set a target (in minutes) and view their progress for the current calendar week (Mon 00:00 → Sun 23:59:59).
+It uses the shared timestamp abstraction (TimestampedEntry#timestamp()) for week calculations and persists goals as normal `WORKOUT GOAL entries`. 
+Users can view their past `workout goals` by using the list feature. 
+
+#### Implementation Details
+
+**Step 1.** User enters for example: `workout goal 150`
+
+**Step 2.** Parser routing
+The Parser inspects tokens after workout goal:
+- If a positive integer is present → SetWorkoutGoalCommand(minutesPerWeek).
+- Otherwise → ViewWorkoutGoalCommand (view current week’s goal & progress).
+
+**Step 3.** Set workout goal command
+
+`SetWorkoutGoalCommand#execute(list, storage):`
+- Validates `minutesPerWeek` > 0. 
+- Appends a new `WorkoutGoalEntry(minutesPerWeek)` to `EntryList`. 
+- Calls `Storage#save(EntryList)` to persist the updated list. 
+- Returns `CommandResult("Weekly workout goal set to X minutes.")`.
+
+> ![SetWorkoutGoal_Sequence](images/SetWorkoutGoal_Sequence.png)
+
+**Step 4.** View workout goal command
+
+`ViewWorkoutGoalCommand#execute(list, storage):`
+- Computes `weekStart = DateTimeUtil.weekStartMonday(now)` (uses TimestampedEntry#timestamp() consistently). 
+- Finds the latest `WorkoutGoalEntry` set for/on this week via `WorkoutGoalQueries#currentWeekGoal(list.asList(), weekStart)`. 
+- Iterates `EntryList` to collect `WorkoutEntry` instances in the same week (using `DateTimeUtil#inSameWeek(ts, weekStart))`, sums `getDuration()`. 
+- If a goal exists: computes `remaining = max(0, goal.minutesPerWeek - minutesThisWeek)` and formats progress. 
+- If no goal: reminds the user to set a goal and lists any workouts done.
+
+> ![ViewWorkoutGoal_Sequence](images/ViewWorkoutGoal_Sequence.png)
+
+**Step 5. UI output**
+
+Ui prints the CommandResult message for both set & view paths.
+
+#### Design Considerations
+
+**Aspect: Number of workout goals shown in list**
+
+| Alternative                                          | Pros                                                    | Cons                                               |
+|------------------------------------------------------|---------------------------------------------------------|----------------------------------------------------|
+| **Allow previous workout goal to remain (current)**  | User can track past goals to keep track of her progress | Overtime, might have too many workout goal entries |
+
+#### Summary
+**Command:**
+- `workout goal <MINUTES>` → sets weekly target and persists via Storage#save(EntryList).
+- `workout goal` → views current week’s goal and progress.
+
+### 3.11 Help Command
 
 #### Overview
 
@@ -675,9 +731,10 @@ This design is highly maintainable. To add a new command to the help message, a 
 
 #### Summary
 
-* **Command:** `help`
-* **Effect:** Displays a list of all commands and their formats.
-* **Key Design:** Leverages the `CommandType` enum as a single source of truth for maintainability.
+- **Command:** `help`
+- **Effect:** Displays a list of all commands and their formats.
+- **Key Design:** Leverages the `CommandType` enum as a single source of truth for maintainability.
+
 ---
 ## Product Scope
 

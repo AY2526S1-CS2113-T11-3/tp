@@ -45,14 +45,19 @@ public class EntryList {
      * Delete by index in the current shown view (what the user sees).
      */
     public Entry deleteByShownIndex(int zeroBasedShown) {
-        Entry target = getShown(zeroBasedShown);
+        if (zeroBasedShown < 0 || zeroBasedShown >= shown.size()) {
+            throw new IndexOutOfBoundsException("Shown index " +
+                    zeroBasedShown +
+                    " out of range (size=" + shown.size() + ")");
+        }
+        Entry target = shown.get(zeroBasedShown);
         int realIndex = indexOf(target);
         if (realIndex < 0) {
-            // fallback; shouldn't happen if equals/hashCode are sane
             throw new IndexOutOfBoundsException("Shown entry not found in backing list");
         }
         return deleteByIndex(realIndex);
     }
+
 
     public int size() {
         return items.size();
