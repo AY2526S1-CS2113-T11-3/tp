@@ -16,8 +16,9 @@
   - [Bye](#10-exiting-the-program--bye)
   - [Help](#11-getting-help--help)
 - [Data File](#data-file)
-- [FAQ](#faq)
 - [Command Summary](#command-summary)
+- [FAQ](#faq)
+
 ---
 
 ## Introduction
