@@ -13,19 +13,23 @@ skinparam sequence {
 
 actor User
 
-participant Ui           as UI  #CFE2FF
-participant Parser       as PR  #CFE2FF
-participant ViewCalorieGoalCommand as VCG #D1E7DD
-participant Storage      as ST   #F8D7DA
-participant EntryList    as EL   #FFF3CD
-participant CalorieGoalSummary as CGS #FFF3CD
-participant CalorieGoalFormatter as CGF #CFE2FF
-participant CommandResult as CR   #D1E7DD
+participant ":Ui"           as UI  #CFE2FF
+participant ":Parser"       as PR  #CFE2FF
+participant ":ViewCalorieGoalCommand" as VCG #D1E7DD
+participant ":Storage"      as ST   #F8D7DA
+participant ":EntryList"    as EL   #FFF3CD
+participant ":CalorieGoalSummary" as CGS #FFF3CD
+participant ":CalorieGoalFormatter" as CGF #CFE2FF
+participant ":CommandResult" as CR   #D1E7DD
 
 User -> UI : enter "calorie goal"
+activate UI
 UI -> PR : parse(raw)
+activate PR
 PR --> UI : returns Command (VCG)
+deactivate PR
 UI -> VCG : execute(list, storage)
+activate VCG
 
 VCG -> ST : loadGoal()
 activate ST
@@ -33,7 +37,7 @@ ST --> VCG : Integer goal (e.g., 1800)
 deactivate ST
 
 alt goal is null
-  VCG -> UI : return CommandResult("No calorie goal set yet. Use: calorie goal <calories>")
+  VCG --> UI : return CommandResult("No calorie goal set yet. Use: calorie goal <calories>")
 else goal exists
   VCG -> EL : asList()
   activate EL
@@ -51,8 +55,11 @@ else goal exists
   deactivate CGF
 
   VCG -> CR : new CommandResult(formattedText)
+  activate CR
   CR --> UI : deliver formatted result
+  deactivate CR
 end
 
 UI --> User : display result
+deactivate UI
 @enduml

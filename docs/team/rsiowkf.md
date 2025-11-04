@@ -70,7 +70,10 @@ My primary contributions focused on implementing the **core data entry commands 
     * Command parsing and validation flow.
     * Interaction between `Command`, `EntryList`, and `Storage`.
     * Sequence diagram for `AddMilkCommand` execution (showing creation, model update, and storage save).
+    * Sequence diagram for `AddWeightCommand` execution
 * Documented the **MilkEntry aggregation logic**, explaining how cumulative milk totals are maintained across sessions.
+* Ensured that diagrams followed the correct syntax and cleaned up when necessary
+* Helped to create the table of contents
 * Highlighted adherence to **Single Responsibility Principle (SRP)** and **Open/Closed Principle (OCP)** in command structure and model hierarchy.
 
 ---

@@ -28,6 +28,7 @@
     - [Glossary](#glossary)
     - [Instructions for Manual Testing](#instructions-for-manual-testing)
     - [Appendix](#appendix-requirements-glossary-and-notes)
+  
 ---
 
 ## Acknowledgements
@@ -625,8 +626,7 @@ in persistent storage and exposes two main user-facing flows:
 > ![CalorieGoal_ClassDiagram.png](images/CalorieGoal_ClassDiagram.png)
 
 **Sequence Diagram**
-
-> ![CalorieGoal_SequenceDiagram.png](images/CalorieGoal_SequenceDiagram.png)
+>![CalorieGoal_SequenceDiagram.png](images/CalorieGoal_SequenceDiagram.png)
 
 #### Design Considerations
 
