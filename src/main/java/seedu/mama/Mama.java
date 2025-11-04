@@ -72,7 +72,7 @@ public class Mama {
 
 
     public static void main(String[] args) {
-        Logger.getLogger("").setLevel(Level.WARNING);
+        Logger.getLogger("").setLevel(Level.SEVERE);
         new Mama().run(); // Create instance and run
     }
 }
