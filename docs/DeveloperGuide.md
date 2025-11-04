@@ -19,7 +19,8 @@
         - [Add Weight](#37-add-weight--ryan-siow)
         - [Feature: View Dashboard](#38-feature-view-dashboard)
         - [Set and View Calorie Control](#39-set-and-view-calorie-goal--ibrahim-shoukry)
-        - [Help Command](#310-help-command)
+        - [Set and View Weekly Workout Goal](#310-set-and-view-weekly-workout-goal---jewel-jace-lim)
+        - [Help Command](#311-help-command)
     - [Product Scope](#product-scope)
     - [Value Proposition](#value-proposition)
     - [User Stories](#user-stories)
@@ -651,7 +652,60 @@ in persistent storage and exposes two main user-facing flows:
 
 ---
 
-### 3.10 Help Command
+### 3.10 Set and View Weekly Workout Goal - Jewel Jace Lim
+#### Overview
+The weekly `workout goal` feature lets users set a target (in minutes) and view their progress for the current calendar week (Mon 00:00 → Sun 23:59:59).
+It uses the shared timestamp abstraction (TimestampedEntry#timestamp()) for week calculations and persists goals as normal `WORKOUT GOAL entries`. 
+Users can view their past `workout goals` by using the list feature. 
+
+#### Implementation Details
+
+**Step 1.** User enters for example: `workout goal 150`
+
+**Step 2.** Parser routing
+The Parser inspects tokens after workout goal:
+- If a positive integer is present → SetWorkoutGoalCommand(minutesPerWeek).
+- Otherwise → ViewWorkoutGoalCommand (view current week’s goal & progress).
+
+**Step 3.** Set workout goal command
+
+`SetWorkoutGoalCommand#execute(list, storage):`
+- Validates `minutesPerWeek` > 0. 
+- Appends a new `WorkoutGoalEntry(minutesPerWeek)` to `EntryList`. 
+- Calls `Storage#save(EntryList)` to persist the updated list. 
+- Returns `CommandResult("Weekly workout goal set to X minutes.")`.
+
+> ![SetWorkoutGoal_Sequence](images/SetWorkoutGoal_Sequence.png)
+
+**Step 4.** View workout goal command
+
+`ViewWorkoutGoalCommand#execute(list, storage):`
+- Computes `weekStart = DateTimeUtil.weekStartMonday(now)` (uses TimestampedEntry#timestamp() consistently). 
+- Finds the latest `WorkoutGoalEntry` set for/on this week via `WorkoutGoalQueries#currentWeekGoal(list.asList(), weekStart)`. 
+- Iterates `EntryList` to collect `WorkoutEntry` instances in the same week (using `DateTimeUtil#inSameWeek(ts, weekStart))`, sums `getDuration()`. 
+- If a goal exists: computes `remaining = max(0, goal.minutesPerWeek - minutesThisWeek)` and formats progress. 
+- If no goal: reminds the user to set a goal and lists any workouts done.
+
+> ![ViewWorkoutGoal_Sequence](images/ViewWorkoutGoal_Sequence.png)
+
+**Step 5. UI output**
+
+Ui prints the CommandResult message for both set & view paths.
+
+#### Design Considerations
+
+**Aspect: Number of workout goals shown in list**
+
+| Alternative                                          | Pros                                                    | Cons                                               |
+|------------------------------------------------------|---------------------------------------------------------|----------------------------------------------------|
+| **Allow previous workout goal to remain (current)**  | User can track past goals to keep track of her progress | Overtime, might have too many workout goal entries |
+
+#### Summary
+**Command:**
+- `workout goal <MINUTES>` → sets weekly target and persists via Storage#save(EntryList).
+- `workout goal` → views current week’s goal and progress.
+
+### 3.11 Help Command
 
 #### Overview
 

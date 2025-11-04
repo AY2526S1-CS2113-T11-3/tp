@@ -9,12 +9,12 @@ skinparam ParticipantBorderRadius 0
 ' Model = #FFF3CD (yellow) | Storage = #F8D7DA (red)
 
 actor User
-participant "UI" as UI                      #CFE2FF
-participant Parser                          #D1E7DD
-participant AddWorkoutCommand as Cmd        #D1E7DD
-participant EntryList as List               #FFF3CD
-participant Storage                         #F8D7DA
-participant "Workout Entry" as WEntry       #FFF3CD
+participant ":UI" as UI                      #CFE2FF
+participant ":Parser" as Parser                          #D1E7DD
+participant ":AddWorkoutCommand" as Cmd        #D1E7DD
+participant ":EntryList" as List               #FFF3CD
+participant ":Storage" as Storage                    #F8D7DA
+participant ":Workout Entry" as WEntry       #FFF3CD
 
 User -> UI : enter command
 UI -> Parser : parse("workout ...")
@@ -36,9 +36,5 @@ opt valid input (ensured by Parser + constructor)
 end
 
 UI -> User : show feedback
-
-legend right
-UI = #CFE2FF | Command logic = #D1E7DD | Model = #FFF3CD | Storage = #F8D7DA
-endlegend
 @enduml
 

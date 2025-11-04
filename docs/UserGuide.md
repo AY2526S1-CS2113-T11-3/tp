@@ -155,6 +155,7 @@ Compact forms are also accepted: ```workout TYPE/durDURATION/feelRATING```
 | **5**       | I feel amazing and/or I loved the workout activity 😍💕                      |
 
 - Exactly one `/dur` and one `/feel` must be present.
+- Input must be in this format order: `workout TYPE /dur DURATION /feel RATING` (avoid `workout TYPE /feel RATING /dur DURATION`).
 - Do not add extra words after the numbers (e.g., avoid `mins`, `great`):
   use `... /dur 30 /feel 4`, not `... /dur 30 mins /feel 4 great`.
 - Each workout is timestamped automatically and saved to storage.
@@ -178,7 +179,7 @@ Sets or views your **weekly workout goal**.
 
 - The goal represents total minutes of workouts per week.
 - A week runs from **Monday 00:00** to **Sunday 23:59**
-- The latest goal you set within the week applies for that week. Setting a new goal later in the same week replaces the earlier one for that week only.
+- The latest goal you set within the week applies for that week and goals do not stack. Setting a new goal later in the same week replaces the earlier one for that week only.
 - Goals do not backfill past weeks and do not carry forward automatically, set a new goal next week if you want one.
 - You can view past workout goals using ```list``` or ```list /t workout_goal```.
 

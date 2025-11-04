@@ -1,0 +1,38 @@
+@startuml
+title SetWorkoutGoalCommand — parse & execute
+
+' Participants (colored per legend)
+actor User
+participant ":UI" as UI #CFE2FF
+participant ":Parser" as Parser #D1E7DD
+participant ":SetWorkoutGoalCommand" as SetCmd #D1E7DD
+participant ":EntryList" as EntryList #FFF3CD
+participant ":Storage" as Storage #F8D7DA
+participant ":WorkoutGoalEntry" as GoalEntry #FFF3CD
+
+User -> UI: "workout goal <minutes>"
+UI -> Parser: parse(input)
+
+alt parse error
+  Parser --> UI: CommandException
+  UI -> User: showError("Usage or numeric error")
+  return
+else parse ok
+  Parser --> UI: SetWorkoutGoalCommand
+end
+
+UI -> SetCmd: execute(list, storage)
+
+alt storage == null
+  SetCmd --> UI: CommandException("Storage not initialized")
+  UI -> User: showError("Storage not initialized properly.")
+else happy path
+  SetCmd -> GoalEntry ++ : «create»(minutesPerWeek)
+  SetCmd -> EntryList: add(WorkoutGoalEntry)
+  SetCmd -> Storage: save(list)
+  Storage --> SetCmd: ok
+  deactivate GoalEntry
+  SetCmd --> UI: CommandResult("Weekly workout goal set to X minutes.")
+  UI -> User: show("Weekly workout goal set to X minutes.")
+end
+@enduml
