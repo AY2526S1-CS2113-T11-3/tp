@@ -5,10 +5,10 @@ skinparam ParticipantBorderRadius 0
 
 title Step 3 — AddWorkoutCommand executes
 
-participant "UI" as UI  #CFE2FF
-participant AddWorkoutCommand as Cmd #D1E7DD
-participant EntryList as List        #FFF3CD
-participant Storage                  #F8D7DA
+participant ":UI" as UI  #CFE2FF
+participant ":AddWorkoutCommand" as Cmd #D1E7DD
+participant ":EntryList" as List        #FFF3CD
+participant ":Storage" as Storage                  #F8D7DA
 
 opt valid input (ensured by Parser + constructor)
   UI -> Cmd : execute(List, Storage)

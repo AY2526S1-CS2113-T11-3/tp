@@ -4,13 +4,13 @@ skinparam shadowing false
 
 title Step 2 — Parser builds AddWorkoutCommand
 
-participant "UI" as UI #CFE2FF
-participant Parser                   #D1E7DD
+participant ":UI" as UI #CFE2FF
+participant ":Parser" as Parser                   #D1E7DD
 
 UI -> Parser ++ : parse("workout yoga /dur 30 /feel 4")
 
 ' Construct the command here (creation + activation attach to header)
-create "AddWorkoutCommand" as Cmd #D1E7DD
+create ":AddWorkoutCommand" as Cmd #D1E7DD
 Parser -> Cmd ++ : AddWorkoutCommand("yoga", 30, 4)
 return
 
